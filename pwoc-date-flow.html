@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>*{margin:0;padding:0}img{max-width:100%}</style>
+<title>เส้นทางวันที่ใน PWOC</title>
+</head>
+<body>
+<style>
+  :root {
+    --ground:#f3f1ec; --surface:#fffdf9; --surface-2:#e9e5dc;
+    --ink:#1d2328; --ink-2:#4e5a61; --ink-3:#7d8891; --line:#d6d0c4;
+    --accent:#0f6b6b; --accent-soft:#d9ebe9;
+    --warn:#a33a1f; --warn-soft:#f6e2da;
+    --ok:#3f6b32; --ok-soft:#e2eedc;
+    --code-bg:#e7e3da;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:#13181a; --surface:#1c2225; --surface-2:#242c30;
+      --ink:#e8eae6; --ink-2:#a8b4ba; --ink-3:#7c888e; --line:#303a3f;
+      --accent:#5fb8b0; --accent-soft:#16302f;
+      --warn:#e0866a; --warn-soft:#35201a;
+      --ok:#86b877; --ok-soft:#1c2b1a;
+      --code-bg:#232b2f;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#13181a; --surface:#1c2225; --surface-2:#242c30;
+    --ink:#e8eae6; --ink-2:#a8b4ba; --ink-3:#7c888e; --line:#303a3f;
+    --accent:#5fb8b0; --accent-soft:#16302f;
+    --warn:#e0866a; --warn-soft:#35201a;
+    --ok:#86b877; --ok-soft:#1c2b1a;
+    --code-bg:#232b2f;
+  }
+
+  * { box-sizing:border-box; }
+  body {
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Tahoma,"Noto Sans Thai",sans-serif;
+    font-size:15px; line-height:1.75;
+  }
+  .wrap { max-width:1200px; margin:0 auto; padding:48px 26px 90px; display:flex; flex-direction:column; gap:38px; }
+  header { display:flex; flex-direction:column; gap:10px; }
+  .eyebrow { font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); font-weight:650; }
+  h1 { margin:0; font-size:clamp(27px,4vw,38px); line-height:1.15; letter-spacing:-.02em; font-weight:650; text-wrap:balance; }
+  .lede { margin:0; max-width:66ch; color:var(--ink-2); font-size:16px; }
+  h2 { margin:0; font-size:19px; font-weight:650; letter-spacing:-.01em; }
+  section { display:flex; flex-direction:column; gap:15px; }
+  p { margin:0; }
+
+  figure { margin:0; background:var(--surface); border:1px solid var(--line); border-radius:5px;
+           padding:22px 18px 16px; display:flex; flex-direction:column; gap:13px; }
+  .scroll { overflow-x:auto; }
+  figure svg { display:block; max-width:100%; height:auto; color:var(--ink); }
+  figcaption { color:var(--ink-2); font-size:13.5px; max-width:80ch; border-top:1px solid var(--line); padding-top:11px; }
+
+  table { width:100%; border-collapse:collapse; font-size:14px;
+          background:var(--surface); border:1px solid var(--line); border-radius:5px; overflow:hidden; }
+  th,td { text-align:left; padding:10px 13px; border-bottom:1px solid var(--line); vertical-align:top; }
+  thead th { background:var(--surface-2); font-size:11.5px; letter-spacing:.09em;
+             text-transform:uppercase; color:var(--ink-2); font-weight:650; }
+  tbody tr:last-child td { border-bottom:0; }
+
+  code,.mono { font-family:ui-monospace,"Cascadia Mono",Consolas,monospace;
+               font-size:.875em; background:var(--code-bg); padding:1px 5px; border-radius:3px; }
+
+  .note { border-left:3px solid var(--warn); background:var(--warn-soft);
+          padding:12px 15px; border-radius:0 4px 4px 0; font-size:14px; }
+  .note-ok { border-left-color:var(--accent); background:var(--accent-soft); }
+  .note p + p { margin-top:7px; }
+
+  .cards { display:grid; gap:13px; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); }
+  .card { background:var(--surface); border:1px solid var(--line); border-radius:5px;
+          padding:15px 17px; display:flex; flex-direction:column; gap:8px; }
+  .card h3 { margin:0; font-size:15px; font-weight:650; }
+  .card p { font-size:14px; color:var(--ink-2); }
+  .tag { display:inline-block; font-size:11px; font-weight:650; letter-spacing:.05em;
+         padding:2px 8px; border-radius:3px; align-self:flex-start; }
+  .tag-hi { background:var(--warn-soft); color:var(--warn); }
+  .tag-lo { background:var(--ok-soft); color:var(--ok); }
+
+  footer { border-top:1px solid var(--line); padding-top:15px; color:var(--ink-3); font-size:13px; }
+  footer p + p { margin-top:7px; }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Foodstar PWOC · แผนที่ field วันที่</div>
+    <h1>เส้นทางวันที่ใน PWOC</h1>
+    <p class="lede">
+      วันที่ในโปรแกรมนี้ไม่ได้มีตัวเดียว มี 3 ช่องบนจอ ไหลต่อเป็น 9 field ใน 5 record
+      แล้วจบที่ Work Order ซึ่ง NetSuite เขียนเอง หน้านี้ไล่ทั้งเส้น พร้อม label ที่แสดงในหน้าจอ NetSuite กำกับคู่กับ internal id และบรรทัดโค้ดจริง
+    </p>
+  </header>
+
+  <section>
+    <h2>ตอนเปิดใบ — ค่าดีฟอลต์มาจากไหน</h2>
+    <figure>
+      <div class="scroll">
+        <svg viewBox="0 0 1160 470" role="img" style="min-width:980px"
+             aria-label="แผนภาพบันไดลำดับความสำคัญของค่าดีฟอลต์สามช่อง Start Date End Date และ MFG Date แต่ละช่องไล่จากค่าที่เคยบันทึกในใบ ลงมาที่ released batch แล้ว Work Order แล้ววันนี้ โดย End Date ไม่มีชั้น released batch">
+          <defs>
+            <marker id="dn" viewBox="0 0 10 10" refX="5" refY="9" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 0 L 10 0 L 5 10 z" fill="var(--ink-3)"/>
+            </marker>
+          </defs>
+
+          <text x="24" y="20" font-size="11" font-weight="700" letter-spacing="1.2" fill="var(--ink-3)">ลำดับ</text>
+
+          <rect x="140" y="34" width="300" height="40" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="290" y="59" text-anchor="middle" font-size="13.5" font-weight="650" fill="var(--ink)">Start Date / Time</text>
+
+          <rect x="470" y="34" width="300" height="40" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="620" y="59" text-anchor="middle" font-size="13.5" font-weight="650" fill="var(--ink)">End Date / Time</text>
+
+          <rect x="800" y="34" width="300" height="40" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="950" y="59" text-anchor="middle" font-size="13.5" font-weight="650" fill="var(--ink)">MFG Date</text>
+
+          <text x="24" y="118" font-size="12" font-weight="650" fill="var(--ink-2)">1 · ใบนี้</text>
+          <text x="24" y="136" font-size="10.5" fill="var(--ink-3)">เคยบันทึกแล้ว</text>
+          <text x="24" y="204" font-size="12" font-weight="650" fill="var(--ink-2)">2 · Batch</text>
+          <text x="24" y="290" font-size="12" font-weight="650" fill="var(--ink-2)">3 · Work Order</text>
+          <text x="24" y="378" font-size="12" font-weight="650" fill="var(--ink-2)">4 · สำรอง</text>
+
+          <rect x="140" y="96" width="300" height="56" rx="4" fill="var(--surface-2)" stroke="var(--ok)" stroke-width="1.5"/>
+          <text x="152" y="116" font-size="11.5" font-weight="650" fill="var(--ink)">Start Date/Time</text>
+          <text x="152" y="134" font-size="10" fill="var(--ink-3)">custrecord_mfg_prewoc_task_startdatetime</text>
+          <text x="152" y="147" font-size="10" fill="var(--ink-3)">MFG Pre WOC - Task</text>
+
+          <rect x="470" y="96" width="300" height="56" rx="4" fill="var(--surface-2)" stroke="var(--ok)" stroke-width="1.5"/>
+          <text x="482" y="116" font-size="11.5" font-weight="650" fill="var(--ink)">End Date/Time</text>
+          <text x="482" y="134" font-size="10" fill="var(--ink-3)">custrecord_mfg_prewoc_task_enddatetime</text>
+          <text x="482" y="147" font-size="10" fill="var(--ink-3)">MFG Pre WOC - Task</text>
+
+          <rect x="800" y="96" width="300" height="56" rx="4" fill="var(--surface-2)" stroke="var(--ok)" stroke-width="1.5"/>
+          <text x="812" y="116" font-size="11.5" font-weight="650" fill="var(--ink)">Completion Date</text>
+          <text x="812" y="134" font-size="10" fill="var(--ink-3)">custrecord_mfg_prewoc_wocdate</text>
+          <text x="812" y="147" font-size="10" fill="var(--ink-3)">MFG Pre WOC</text>
+
+          <rect x="140" y="180" width="300" height="60" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="152" y="200" font-size="11.5" font-weight="650" fill="var(--ink)">Production Start Date</text>
+          <text x="152" y="218" font-size="10" fill="var(--ink-3)">custrecord_mfg_released_prod_startdate</text>
+          <text x="152" y="231" font-size="10" fill="var(--ink-3)">MFG Released WO Batch · มีเวลา</text>
+
+          <rect x="470" y="180" width="300" height="60" rx="4" fill="none" stroke="var(--warn)" stroke-width="1.4" stroke-dasharray="6 4"/>
+          <text x="620" y="207" text-anchor="middle" font-size="12" font-weight="650" fill="var(--warn)">ไม่มีชั้นนี้</text>
+          <text x="620" y="227" text-anchor="middle" font-size="10.5" fill="var(--ink-2)">End ข้ามไปใช้ WO เลย</text>
+
+          <rect x="800" y="180" width="300" height="60" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="812" y="200" font-size="11.5" font-weight="650" fill="var(--ink)">Production Start Date</text>
+          <text x="812" y="218" font-size="10" fill="var(--ink-3)">custrecord_mfg_released_prod_startdate</text>
+          <text x="812" y="231" font-size="10" fill="var(--ink-3)">ตัวเดียวกับ Start</text>
+
+          <rect x="140" y="268" width="300" height="60" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="152" y="288" font-size="11.5" font-weight="650" fill="var(--ink)">Production Start Date</text>
+          <text x="152" y="304" font-size="10" fill="var(--ink-3)">workorder.startdate</text>
+          <text x="152" y="318" font-size="10" fill="var(--warn)">ไม่มีเวลา → ใช้เวลาปัจจุบัน · หลาย WO เอาค่ามากสุด</text>
+
+          <rect x="470" y="268" width="300" height="60" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="482" y="288" font-size="11.5" font-weight="650" fill="var(--ink)">Production End Date</text>
+          <text x="482" y="304" font-size="10" fill="var(--ink-3)">workorder.enddate</text>
+          <text x="482" y="318" font-size="10" fill="var(--warn)">ไม่มีเวลา → ใช้เวลาปัจจุบัน</text>
+
+          <rect x="800" y="268" width="300" height="60" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="812" y="288" font-size="11.5" font-weight="650" fill="var(--ink)">Production Start Date</text>
+          <text x="812" y="304" font-size="10" fill="var(--ink-3)">workorder.startdate</text>
+          <text x="812" y="318" font-size="10" fill="var(--ink-3)">MFG = WO Start เสมอ · สเปก 2026-06-22</text>
+
+          <rect x="140" y="356" width="300" height="46" rx="4" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="152" y="384" font-size="11.5" fill="var(--ink-2)">วันนี้ · เวลาปัจจุบัน</text>
+
+          <rect x="470" y="356" width="300" height="46" rx="4" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="482" y="384" font-size="11.5" fill="var(--ink-2)">วันนี้ · เวลาปัจจุบัน</text>
+
+          <rect x="800" y="356" width="300" height="46" rx="4" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="812" y="384" font-size="11.5" fill="var(--ink-2)">getDefaultMfgDate(now) · คำนวณกะ</text>
+
+          <g fill="none" stroke="var(--ink-3)" stroke-width="1.4">
+            <path d="M290,152 V174" marker-end="url(#dn)"/>
+            <path d="M290,240 V262" marker-end="url(#dn)"/>
+            <path d="M290,328 V350" marker-end="url(#dn)"/>
+            <path d="M620,152 V174" marker-end="url(#dn)"/>
+            <path d="M620,240 V262" marker-end="url(#dn)"/>
+            <path d="M620,328 V350" marker-end="url(#dn)"/>
+            <path d="M950,152 V174" marker-end="url(#dn)"/>
+            <path d="M950,240 V262" marker-end="url(#dn)"/>
+            <path d="M950,328 V350" marker-end="url(#dn)"/>
+          </g>
+
+          <text x="140" y="434" font-size="11.5" fill="var(--ink-2)">อ่านจากบนลงล่าง · ชั้นแรกที่มีค่าเป็นผู้ชนะ แล้วหยุด</text>
+          <text x="140" y="454" font-size="11" fill="var(--ink-3)">navigation.js:644 ชั้น 1 · :697 startAnchor = batchStartObj || woStartObj || now · :735 defaultMfgDate</text>
+        </svg>
+      </div>
+      <figcaption>
+        ช่องค้นหาทั้งสี่แบบ (<code>T…</code> · <code>W…</code> · <code>O…</code> · <code>NNNNN-B…</code>)
+        ใช้บันไดชุดเดียวกันหมด — ตัวที่ตัดสินคือ <strong>ข้อมูลที่ task พกมา</strong> ไม่ใช่วิธีค้น
+        GH#36 ยกเลิกเงื่อนไข <code>MULTI_TASK_SOURCE.type === 'BATCH'</code> ทิ้งไปแล้ว
+      </figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>ตอนบันทึก — วันเดินไปไหนบ้าง</h2>
+    <figure>
+      <div class="scroll">
+        <svg viewBox="0 0 1180 560" role="img" style="min-width:1000px"
+             aria-label="แผนภาพเส้นทางของวันที่จากหน้าจอ PWOC ไปยัง record PWOC completion log WOC และจบที่ Work Order สายบนคือ MFG Date ที่ไหลไปเป็น trandate ของ WOC แล้ว NetSuite คำนวณ operation task ใหม่ดันขึ้นหัว Work Order สายกลางคือ Start End ที่จบที่ WOC ไม่ไปต่อ สายล่างคือ task management ที่เขียนเฉพาะเมื่อมี WOC แล้ว">
+          <defs>
+            <marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink-3)"/>
+            </marker>
+            <marker id="ar3w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--warn)"/>
+            </marker>
+          </defs>
+
+          <text x="24"  y="20" font-size="11" font-weight="700" letter-spacing="1.2" fill="var(--ink-3)">หน้าจอ PWOC</text>
+          <text x="256" y="20" font-size="11" font-weight="700" letter-spacing="1.2" fill="var(--ink-3)">PWOC record</text>
+          <text x="488" y="20" font-size="11" font-weight="700" letter-spacing="1.2" fill="var(--ink-3)">Completion Log</text>
+          <text x="720" y="20" font-size="11" font-weight="700" letter-spacing="1.2" fill="var(--ink-3)">WOC</text>
+          <text x="952" y="20" font-size="11" font-weight="700" letter-spacing="1.2" fill="var(--ink-3)">Work Order</text>
+
+          <rect x="24" y="42" width="196" height="70" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="36" y="66" font-size="12.5" font-weight="650" fill="var(--ink)">MFG Date</text>
+          <text x="36" y="86" font-size="10.5" fill="var(--ink-2)">#mfg-date</text>
+          <text x="36" y="102" font-size="10.5" fill="var(--ink-3)">แท็บ Lot &amp; Pallet</text>
+
+          <rect x="256" y="42" width="196" height="70" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="268" y="64" font-size="12" font-weight="650" fill="var(--ink)">Completion Date</text>
+          <text x="268" y="80" font-size="10" fill="var(--ink-3)">custrecord_mfg_prewoc_wocdate</text>
+          <text x="268" y="94" font-size="10" fill="var(--ink-3)">MFG Pre WOC</text>
+          <text x="268" y="106" font-size="10" fill="var(--ink-3)">Backend.js:4435</text>
+
+          <rect x="488" y="42" width="196" height="70" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="500" y="64" font-size="12" font-weight="650" fill="var(--ink)">Completion Date</text>
+          <text x="500" y="80" font-size="10" fill="var(--ink-3)">custrecord_mfg_clog_completion_date</text>
+          <text x="500" y="94" font-size="10" fill="var(--ink-3)">MFG Completion Process Log</text>
+          <text x="500" y="106" font-size="10" fill="var(--ink-3)">Process PreWOC.js:1793</text>
+
+          <rect x="720" y="42" width="196" height="70" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.8"/>
+          <text x="732" y="64" font-size="12" font-weight="650" fill="var(--warn)">Date</text>
+          <text x="732" y="80" font-size="10" fill="var(--ink-2)">trandate</text>
+          <text x="732" y="94" font-size="10" fill="var(--ink-2)">Work Order Completion</text>
+          <text x="732" y="106" font-size="10" fill="var(--ink-2)">mfg_action_completion.js:1689</text>
+
+          <rect x="952" y="30" width="204" height="152" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.8"/>
+          <text x="964" y="54" font-size="12" font-weight="650" fill="var(--warn)">NetSuite คำนวณเอง</text>
+          <text x="964" y="74" font-size="10.5" fill="var(--ink-2)">reschedule operation task</text>
+          <text x="964" y="90" font-size="10.5" fill="var(--ink-2)">ทั้ง 3 op ตาม trandate</text>
+          <line x1="964" y1="102" x2="1144" y2="102" stroke="var(--warn)" stroke-dasharray="3 3"/>
+          <text x="964" y="120" font-size="11.5" font-weight="650" fill="var(--ink)">Production Start Date</text>
+          <text x="964" y="136" font-size="11.5" font-weight="650" fill="var(--ink)">Production End Date</text>
+          <text x="964" y="152" font-size="10" fill="var(--ink-2)">workorder.startdate · .enddate</text>
+          <text x="964" y="170" font-size="10" fill="var(--warn)">ทับค่าที่ผู้ใช้แก้เอง · #148</text>
+
+          <rect x="24" y="226" width="196" height="86" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="36" y="250" font-size="12.5" font-weight="650" fill="var(--ink)">Time Information</text>
+          <text x="36" y="270" font-size="10.5" fill="var(--ink-2)">#start-date · #start-time</text>
+          <text x="36" y="286" font-size="10.5" fill="var(--ink-2)">#end-date · #end-time</text>
+          <text x="36" y="304" font-size="10.5" fill="var(--ink-3)">ฐานเวลาของ Labor + MD</text>
+
+          <rect x="256" y="226" width="196" height="86" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="268" y="248" font-size="12" font-weight="650" fill="var(--ink)">Start Date/Time</text>
+          <text x="268" y="264" font-size="12" font-weight="650" fill="var(--ink)">End Date/Time</text>
+          <text x="268" y="280" font-size="10" fill="var(--ink-3)">custrecord_mfg_prewoc_task_startdatetime</text>
+          <text x="268" y="292" font-size="10" fill="var(--ink-3)">MFG Pre WOC - Task</text>
+          <text x="268" y="304" font-size="10" fill="var(--ink-3)">Backend.js:4427 · :5645</text>
+
+          <rect x="488" y="226" width="196" height="86" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="500" y="248" font-size="12" font-weight="650" fill="var(--ink)">Start Date/Time</text>
+          <text x="500" y="264" font-size="12" font-weight="650" fill="var(--ink)">End Date/Time</text>
+          <text x="500" y="280" font-size="10" fill="var(--ink-3)">custrecord_mfg_clog_start_date · _end_date</text>
+          <text x="500" y="292" font-size="10" fill="var(--ink-3)">MFG Completion Process Log</text>
+          <text x="500" y="304" font-size="10" fill="var(--ink-3)">Process PreWOC.js:1829</text>
+
+          <rect x="720" y="226" width="196" height="86" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="732" y="248" font-size="11.5" font-weight="650" fill="var(--ink)">MFG Completion</text>
+          <text x="732" y="262" font-size="11.5" font-weight="650" fill="var(--ink)">Start / End Date/Time</text>
+          <text x="732" y="280" font-size="10" fill="var(--ink-3)">custbody_mfg_com_start_date_time</text>
+          <text x="732" y="292" font-size="10" fill="var(--ink-3)">custbody_mfg_com_end_date_time</text>
+          <text x="732" y="304" font-size="10" fill="var(--ink-3)">Bundle 573477</text>
+
+          <rect x="952" y="226" width="204" height="86" rx="4" fill="none" stroke="var(--ok)" stroke-width="1.4" stroke-dasharray="6 4"/>
+          <text x="1054" y="264" text-anchor="middle" font-size="12" font-weight="650" fill="var(--ok)">จบที่ WOC</text>
+          <text x="1054" y="284" text-anchor="middle" font-size="10.5" fill="var(--ink-2)">ไม่ไหลต่อไปที่ WO</text>
+
+          <rect x="256" y="392" width="196" height="90" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="268" y="414" font-size="12" font-weight="650" fill="var(--ink)">Start Date/Time</text>
+          <text x="268" y="430" font-size="12" font-weight="650" fill="var(--ink)">End Date/Time</text>
+          <text x="268" y="446" font-size="10" fill="var(--ink-3)">custrecord_mfg_tm_start_date_time</text>
+          <text x="268" y="458" font-size="10" fill="var(--ink-3)">custrecord_mfg_tm_end_date_time</text>
+          <text x="268" y="472" font-size="10" fill="var(--ink-3)">MFG Task Management</text>
+
+          <rect x="488" y="392" width="196" height="90" rx="4" fill="none" stroke="var(--ink-3)" stroke-width="1.4" stroke-dasharray="6 4"/>
+          <text x="586" y="424" text-anchor="middle" font-size="11.5" font-weight="650" fill="var(--ink-2)">ด่านกั้น</text>
+          <text x="586" y="446" text-anchor="middle" font-size="10.5" fill="var(--ink-2)">เขียนเฉพาะ task</text>
+          <text x="586" y="462" text-anchor="middle" font-size="10.5" fill="var(--ink-2)">ที่มี WOC แล้ว</text>
+
+          <rect x="720" y="392" width="196" height="90" rx="4" fill="none" stroke="var(--ok)" stroke-width="1.4" stroke-dasharray="6 4"/>
+          <text x="818" y="424" text-anchor="middle" font-size="11.5" font-weight="650" fill="var(--ok)">ไม่มี UE รับต่อ</text>
+          <text x="818" y="446" text-anchor="middle" font-size="10.5" fill="var(--ink-2)">mfg_ue_task_management</text>
+          <text x="818" y="462" text-anchor="middle" font-size="10.5" fill="var(--ink-2)">อ่านอย่างเดียว</text>
+
+          <g fill="none" stroke="var(--warn)" stroke-width="2">
+            <path d="M224,77 H252" marker-end="url(#ar3w)"/>
+            <path d="M456,77 H484" marker-end="url(#ar3w)"/>
+            <path d="M688,77 H716" marker-end="url(#ar3w)"/>
+            <path d="M920,77 H948" marker-end="url(#ar3w)"/>
+          </g>
+          <g fill="none" stroke="var(--ink-3)" stroke-width="1.6">
+            <path d="M224,269 H252" marker-end="url(#ar3)"/>
+            <path d="M456,269 H484" marker-end="url(#ar3)"/>
+            <path d="M688,269 H716" marker-end="url(#ar3)"/>
+            <path d="M920,269 H948" marker-end="url(#ar3)"/>
+            <path d="M354,312 V386" marker-end="url(#ar3)"/>
+            <path d="M456,437 H484" marker-end="url(#ar3)"/>
+            <path d="M688,437 H716" marker-end="url(#ar3)"/>
+          </g>
+
+          <text x="24" y="528" font-size="11.5" fill="var(--ink-2)">เส้นหนาสีเข้ม = สายเดียวที่ไปถึง Work Order</text>
+          <text x="24" y="548" font-size="11" fill="var(--ink-3)">Backend.js:908 เขียน task management โดยมีด่าน taskToWoc กั้นไว้</text>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>MFG Date คือวันเดียวที่ไปถึง Work Order</strong> — Start / End ที่ Time Information
+        หยุดอยู่ที่ WOC ไม่มีผลกับหัว WO เลย ส่วนสายล่างเขียนลง task management เฉพาะ task ที่มี WOC แล้ว
+        และไม่มี User Event ตัวใดรับต่อ
+      </figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>สายแยก — Lot &amp; Pallet</h2>
+    <figure>
+      <div class="scroll">
+        <svg viewBox="0 0 1080 230" role="img" style="min-width:860px"
+             aria-label="แผนภาพสายแยกจาก MFG Date ไปเป็นวันผลิตบน Lot Pallet Info แล้วแตกเป็นเลขพาเลทที่ฝังวันแบบวันเดือนปี และวันหมดอายุที่คำนวณจากอายุสินค้า">
+          <defs>
+            <marker id="ar4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)"/>
+            </marker>
+          </defs>
+
+          <rect x="24" y="76" width="200" height="76" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="36" y="102" font-size="12.5" font-weight="650" fill="var(--ink)">MFG Date</text>
+          <text x="36" y="122" font-size="10.5" fill="var(--ink-2)">#mfg-date</text>
+          <text x="36" y="140" font-size="10.5" fill="var(--ink-3)">บังคับกรอก</text>
+
+          <rect x="286" y="76" width="220" height="76" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="298" y="100" font-size="12" font-weight="650" fill="var(--ink)">MFG Date</text>
+          <text x="298" y="118" font-size="10" fill="var(--ink-3)">custrecord_mfg_lpi_mfgdate</text>
+          <text x="298" y="130" font-size="10" fill="var(--ink-3)">MFG Lot/Pallet info</text>
+          <text x="298" y="144" font-size="10" fill="var(--ink-3)">Backend.js:4332</text>
+
+          <rect x="568" y="18" width="240" height="80" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="580" y="42" font-size="12" font-weight="650" fill="var(--ink)">Pallet Number</text>
+          <text x="580" y="58" font-size="10" fill="var(--ink-3)">custrecord_mfg_lpi_palletnumber</text>
+          <text x="580" y="74" font-size="11" fill="var(--ink-2)">PL- + DDMMYYYY + - + running</text>
+          <text x="580" y="90" font-size="10" fill="var(--ink-3)">SL-PWOC-DB.js:463</text>
+
+          <rect x="568" y="130" width="240" height="80" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="580" y="154" font-size="12" font-weight="650" fill="var(--ink)">Exp Date</text>
+          <text x="580" y="170" font-size="10" fill="var(--ink-3)">custrecord_mfg_lpi_expdate</text>
+          <text x="580" y="186" font-size="11" fill="var(--ink-2)">MFG Date + อายุสินค้า</text>
+          <text x="580" y="200" font-size="10" fill="var(--ink-3)">custitem_mfg_sheftlife</text>
+
+          <rect x="852" y="18" width="204" height="80" rx="4" fill="none" stroke="var(--warn)" stroke-width="1.4" stroke-dasharray="6 4"/>
+          <text x="954" y="48" text-anchor="middle" font-size="11.5" font-weight="650" fill="var(--warn)">วันอยู่หน้าเดือน</text>
+          <text x="954" y="68" text-anchor="middle" font-size="10.5" fill="var(--ink-2)">เรียงตัวอักษรแล้วลำดับผิด</text>
+          <text x="954" y="86" text-anchor="middle" font-size="10.5" fill="var(--ink-2)">แก้ที่ #146</text>
+
+          <g fill="none" stroke="var(--accent)" stroke-width="1.8">
+            <path d="M228,114 H282" marker-end="url(#ar4)"/>
+            <path d="M510,114 H540 V58 H564" marker-end="url(#ar4)"/>
+            <path d="M510,114 H540 V170 H564" marker-end="url(#ar4)"/>
+          </g>
+          <g fill="none" stroke="var(--warn)" stroke-width="1.4" stroke-dasharray="5 4">
+            <path d="M812,58 H848"/>
+          </g>
+        </svg>
+      </div>
+      <figcaption>
+        MFG Date ถูกฝังลงในเลขพาเลทเป็นรูปแบบ <code>PL-DDMMYYYY-###</code> ซึ่งเป็นต้นเหตุของ
+        <strong>#146</strong> — วันอยู่หน้าเดือน ทำให้เรียงตัวอักษรได้ลำดับผิดเมื่อ batch คร่อมเดือน
+      </figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>กติกาที่ผูกช่องต่าง ๆ เข้าด้วยกัน</h2>
+    <div class="cards">
+      <div class="card">
+        <span class="tag tag-lo">auto-sync</span>
+        <h3>แก้ MFG Date แล้ว Start Date ตามทันที</h3>
+        <p><code>init.js:174</code> — เมื่อผู้ใช้แก้ MFG Date ระบบ set <code>#start-date</code> ให้เท่ากันเสมอ</p>
+        <p>ถ้า End Date เก่ากว่า Start ใหม่ จะถูกดันขึ้นมาเท่ากับ Start</p>
+      </div>
+      <div class="card">
+        <span class="tag tag-lo">กันเขียนทับ</span>
+        <h3>ตอนกู้ค่าเก่า sync ถูกปิด</h3>
+        <p>ธง <code>window._PWOC_RESTORING_MFG</code> กันไม่ให้ auto-sync ทับ Start Date ที่เพิ่งกู้คืนมา</p>
+        <p>ก่อนมีธงนี้ ใบที่ทำข้ามคืน (Start ≠ MFG) จะถูกรีเซ็ตทุกครั้งที่ reload</p>
+      </div>
+      <div class="card">
+        <span class="tag tag-hi">ล็อก</span>
+        <h3>มีพาเลทแล้วแก้วันไม่ได้</h3>
+        <p><code>ui.js:500</code> <code>checkAndLockStartDateTime()</code> — ถ้ามีพาเลทที่สร้างแล้ว จะล็อก <strong>MFG Date + Start Date</strong></p>
+        <p><strong>Start Time ยังแก้ได้</strong> · โหมด Lot Transfer ข้ามการล็อกทั้งหมด</p>
+      </div>
+      <div class="card">
+        <span class="tag tag-lo">trigger</span>
+        <h3>พิมพ์เองก็ต้องนับ</h3>
+        <p>flatpickr ตั้ง <code>allowInput: true</code> — ค่าที่พิมพ์เองไม่เคยยิง <code>onChange</code></p>
+        <p>#145 เพิ่ม trigger ตอนออกจากช่อง เพื่อให้ Labor และ Machine Down คำนวณใหม่</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>ตารางรวมทุก field</h2>
+    <p style="color:var(--ink-2);font-size:14px">
+      คอลัมน์แรกคือ <strong>label ที่แสดงในหน้าจอ NetSuite</strong> · คอลัมน์ที่สองคือ internal id ที่ใช้ในโค้ด
+    </p>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th>Label ใน NetSuite</th><th>Field ID</th><th>Record</th><th>ใครเขียน</th><th>ไหลต่อไปไหน</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>MFG Date</strong></td>
+            <td><code>#mfg-date</code></td>
+            <td>หน้าจอ PWOC · แท็บ Lot &amp; Pallet</td>
+            <td>ผู้ใช้</td>
+            <td>PWOC <em>Completion Date</em> · LPI <em>MFG Date</em> · sync ลง Start Date</td>
+          </tr>
+          <tr>
+            <td><strong>Start Date/Time · End Date/Time</strong></td>
+            <td><code>#start-date</code> · <code>#start-time</code><br><code>#end-date</code> · <code>#end-time</code></td>
+            <td>หน้าจอ PWOC · Time Information</td>
+            <td>ผู้ใช้ · auto-sync จาก MFG Date</td>
+            <td>span ฐานของ Labor + Machine Down · PWOC Task <em>Start/End Date/Time</em></td>
+          </tr>
+          <tr>
+            <td><strong>Completion Date</strong></td>
+            <td><code>custrecord_mfg_prewoc_wocdate</code></td>
+            <td>MFG Pre WOC</td>
+            <td><code>Backend.js:4435</code></td>
+            <td>Completion Log <em>Completion Date</em> → WOC <em>Date</em></td>
+          </tr>
+          <tr>
+            <td><strong>Start Date/Time · End Date/Time</strong></td>
+            <td><code>custrecord_mfg_prewoc_task_startdatetime</code><br><code>custrecord_mfg_prewoc_task_enddatetime</code></td>
+            <td>MFG Pre WOC - Task</td>
+            <td><code>Backend.js:4427 · :5645</code></td>
+            <td>Completion Log <em>Start/End Date/Time</em> · MFG Task Management</td>
+          </tr>
+          <tr>
+            <td><strong>Start Date/Time · End Date/Time</strong></td>
+            <td><code>custrecord_mfg_tm_start_date_time</code><br><code>custrecord_mfg_tm_end_date_time</code></td>
+            <td>MFG Task Management</td>
+            <td><code>Backend.js:908</code> · เฉพาะ task ที่มี WOC</td>
+            <td><strong>ไม่มีใครรับต่อ</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Completion Date</strong></td>
+            <td><code>custrecord_mfg_clog_completion_date</code></td>
+            <td>MFG Completion Process Log</td>
+            <td><code>Process PreWOC.js:1793</code> · fallback → production start</td>
+            <td>WOC <em>Date</em></td>
+          </tr>
+          <tr>
+            <td><strong>Start Date/Time · End Date/Time</strong></td>
+            <td><code>custrecord_mfg_clog_start_date</code><br><code>custrecord_mfg_clog_end_date</code></td>
+            <td>MFG Completion Process Log</td>
+            <td><code>Process PreWOC.js:1829</code></td>
+            <td>จบที่ log ไม่ไหลต่อ</td>
+          </tr>
+          <tr>
+            <td><strong>Date</strong></td>
+            <td><code>trandate</code></td>
+            <td>Work Order Completion</td>
+            <td><code>mfg_action_completion.js:1689</code> · fallback → <code>new Date()</code></td>
+            <td><strong>NetSuite → Production Start / End Date ของ WO</strong></td>
+          </tr>
+          <tr>
+            <td><strong>MFG Completion Start / End Date/Time</strong></td>
+            <td><code>custbody_mfg_com_start_date_time</code><br><code>custbody_mfg_com_end_date_time</code></td>
+            <td>Work Order Completion · Bundle 573477</td>
+            <td><code>mfg_action_completion.js</code></td>
+            <td>จบที่ WOC</td>
+          </tr>
+          <tr>
+            <td><strong>Production Start Date · Production End Date</strong></td>
+            <td><code>startdate</code> · <code>enddate</code></td>
+            <td>Work Order</td>
+            <td><strong>NetSuite เอง</strong> ไม่มีสคริปต์เขียน</td>
+            <td>กลับมาเป็นค่าดีฟอลต์ชั้น 3 ตอนเปิดใบใหม่</td>
+          </tr>
+          <tr>
+            <td><strong>Production Start Date</strong></td>
+            <td><code>custrecord_mfg_released_prod_startdate</code></td>
+            <td>MFG Released WO Batch</td>
+            <td>นอกโปรแกรมนี้</td>
+            <td>ค่าดีฟอลต์ชั้น 2 ของ Start Date และ MFG Date</td>
+          </tr>
+          <tr>
+            <td><strong>MFG Date · Exp Date · Pallet Number</strong></td>
+            <td><code>custrecord_mfg_lpi_mfgdate</code><br><code>custrecord_mfg_lpi_expdate</code><br><code>custrecord_mfg_lpi_palletnumber</code></td>
+            <td>MFG Lot/Pallet info</td>
+            <td><code>Backend.js:4332</code> · <code>:4360</code></td>
+            <td>Exp = MFG + <code>custitem_mfg_sheftlife</code> · เลขพาเลทฝังวันแบบ DDMMYYYY</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>วงจรที่ปิดกลับมาหาตัวเอง</h2>
+    <div class="note">
+      <p>
+        <code>workorder.startdate</code> เป็นทั้ง <strong>ค่าดีฟอลต์ชั้น 3</strong> ตอนเปิดใบ
+        และเป็น <strong>ปลายทางที่ NetSuite เขียนทับ</strong> หลังสร้าง WOC
+      </p>
+      <p>
+        WO ที่ไม่มี released batch จึงเกิดวงจร — เปิดใบใหม่จะได้ Start Date เป็นวันที่ถูกเขียนทับ
+        ไม่ใช่วันที่ผู้ใช้เคยตั้ง
+      </p>
+      <p>
+        <strong>WO ที่มี released batch ไม่โดนผลนี้</strong> เพราะชั้น 2 ชนะไปก่อน — ขอบเขตของ #148 จึงแคบกว่าที่ประเมินไว้ตอนแรก
+      </p>
+    </div>
+    <div class="note note-ok">
+      <strong>จุดเดียวที่คุมได้</strong> — <code>trandate</code> ของ WOC ซึ่งมาจาก Completion Date ของ PWOC
+      ทั้ง <code>MFG2 SL Process PreWOC.js</code> และ <code>mfg_action_completion.js</code>
+      อยู่ใน <code>/SuiteScripts/Pwoc_gen_completion/</code> ไม่ใช่ bundle จึงแก้ได้จริง
+    </div>
+  </section>
+
+  <footer>
+    <p>
+      ไล่จากโค้ดบน branch <span class="mono">fix/125-scrap-duplicate-on-submit</span> ·
+      สคริปต์บัญชีดึงจาก SB1 <span class="mono">9751184_SB1</span> ·
+      หลักฐาน System Notes จาก <span class="mono">WO-FSC-00000691</span> (id 198389)
+    </p>
+    <p>
+      issue ที่เกี่ยวข้อง · <span class="mono">#145</span> trigger ตอนพิมพ์ ·
+      <span class="mono">#146</span> ลำดับเลขพาเลท ·
+      <span class="mono">#147</span> หาร span ฐาน ·
+      <span class="mono">#148</span> WO ถูกเขียนทับหลังสร้าง WOC
+    </p>
+  </footer>
+
+</div>
+
+</body>
+</html>
