@@ -203,6 +203,158 @@
   </section>
 
   <section>
+    <h2>ลำดับการทำงานตอนเปิดใบ</h2>
+    <figure>
+      <div class="scroll">
+        <svg viewBox="0 0 1160 690" role="img" style="min-width:980px"
+             aria-label="แผนภาพลำดับการเปิดใบ PWOC ตั้งแต่สแกนที่ช่องค้นหา ผ่านด่านตรวจสามด่าน เรียก getInitialData ที่ฝั่ง backend หา PWOC เดิมหรือแจ้งว่าต้องสร้างใหม่ แล้วฝั่งหน้าจอตั้งค่าวันที่ก่อน จากนั้นจึงโหลด Machine Down และ Labor ปิดท้ายด้วยการล็อกวันเมื่อมีพาเลทแล้ว">
+          <defs>
+            <marker id="fw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink-3)"/>
+            </marker>
+            <marker id="fwA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)"/>
+            </marker>
+            <marker id="fwW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--warn)"/>
+            </marker>
+          </defs>
+
+          <text x="24" y="22" font-size="11" font-weight="700" letter-spacing="1.2" fill="var(--ink-3)">หน้าจอ</text>
+          <text x="430" y="22" font-size="11" font-weight="700" letter-spacing="1.2" fill="var(--ink-3)">ด่านตรวจ</text>
+          <text x="836" y="22" font-size="11" font-weight="700" letter-spacing="1.2" fill="var(--ink-3)">Backend</text>
+
+          <rect x="24" y="38" width="240" height="74" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="36" y="62" font-size="12.5" font-weight="650" fill="var(--ink)">1 · สแกน / พิมพ์</text>
+          <text x="36" y="82" font-size="10.5" fill="var(--ink-2)">T… W… O… NNNNN-B…</text>
+          <text x="36" y="100" font-size="10" fill="var(--ink-3)">search.js</text>
+
+          <rect x="24" y="140" width="240" height="90" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="36" y="164" font-size="12.5" font-weight="650" fill="var(--ink)">2 · กรอง task</text>
+          <text x="36" y="184" font-size="10.5" fill="var(--ink-2)">เอาเฉพาะ Released to Production</text>
+          <text x="36" y="202" font-size="10.5" fill="var(--ink-2)">เรียงตาม operation sequence</text>
+          <text x="36" y="220" font-size="10" fill="var(--ink-3)">search.js:160</text>
+
+          <rect x="430" y="38" width="360" height="74" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.5"/>
+          <text x="442" y="62" font-size="12" font-weight="650" fill="var(--warn)">ด่าน 1 · วันผลิตปนกัน</text>
+          <text x="442" y="82" font-size="10.5" fill="var(--ink-2)">blockOnMixedProdDays · search.js:95</text>
+          <text x="442" y="100" font-size="10.5" fill="var(--ink-2)">task คนละวัน → หยุด ให้ค้นทีละวัน</text>
+
+          <rect x="430" y="130" width="360" height="90" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.5"/>
+          <text x="442" y="154" font-size="12" font-weight="650" fill="var(--warn)">ด่าน 2 · PWOC มากกว่าหนึ่งใบ</text>
+          <text x="442" y="174" font-size="10.5" fill="var(--ink-2)">blockOnMultiplePwocs · search.js:78</text>
+          <text x="442" y="192" font-size="10.5" fill="var(--ink-2)">ไล่จากแถว task ไม่ได้ดูหัวใบ</text>
+          <text x="442" y="210" font-size="10.5" fill="var(--ink-3)">ข้ามด่านนี้เมื่อค้นด้วย O… (Order Sheet)</text>
+
+          <rect x="430" y="238" width="360" height="74" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="442" y="262" font-size="12" font-weight="650" fill="var(--ink)">ด่าน 3 · เลือกโหมด</text>
+          <text x="442" y="282" font-size="10.5" fill="var(--ink-2)">last task &gt; 1 หรือ Order Sheet → Multi-Task</text>
+          <text x="442" y="300" font-size="10.5" fill="var(--ink-2)">นอกนั้น → Single Task</text>
+
+          <rect x="836" y="38" width="300" height="110" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="848" y="62" font-size="12.5" font-weight="650" fill="var(--ink)">3 · getInitialData</text>
+          <text x="848" y="82" font-size="10.5" fill="var(--ink-2)">getTaskInformation</text>
+          <text x="848" y="100" font-size="10.5" fill="var(--ink-2)">หา PWOC เดิม / บอกว่าต้องสร้างใหม่</text>
+          <text x="848" y="118" font-size="10.5" fill="var(--ink-2)">completedQty ของ task</text>
+          <text x="848" y="136" font-size="10" fill="var(--ink-3)">Backend.js:2713</text>
+
+          <rect x="836" y="170" width="300" height="96" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="848" y="194" font-size="12" font-weight="650" fill="var(--ink)">คืน preCompObj</text>
+          <text x="848" y="214" font-size="10.5" fill="var(--ink-2)">precompletionId · statusId</text>
+          <text x="848" y="232" font-size="10.5" fill="var(--ink-2)">startDate · endDate · completionDate</text>
+          <text x="848" y="250" font-size="10.5" fill="var(--warn)">ใบใหม่ → ไม่มี key วันมาเลย</text>
+
+          <rect x="24" y="330" width="1112" height="76" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.8"/>
+          <text x="36" y="356" font-size="13" font-weight="650" fill="var(--ink)">4 · setDefaultDateTime() — ต้องมาก่อนทุกอย่าง</text>
+          <text x="36" y="376" font-size="10.5" fill="var(--ink-2)">ตั้ง Start / End / MFG Date ตามบันได 4 ชั้น · navigation.js:498</text>
+          <text x="36" y="394" font-size="10.5" fill="var(--ink-2)">คอมเมนต์ในโค้ดเขียนกำกับไว้ว่า Machine Down กับ Labor ต้องรอ เพราะทั้งคู่ใช้ Time Information เป็นฐานเวลา</text>
+
+          <rect x="24" y="428" width="356" height="96" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="36" y="452" font-size="12" font-weight="650" fill="var(--ink)">5 · Machine Down</text>
+          <text x="36" y="472" font-size="10.5" fill="var(--ink-2)">มีของเดิม → loadExistingMachineDown</text>
+          <text x="36" y="490" font-size="10.5" fill="var(--ink-2)">ไม่มี → addDefaultMachineDownRow</text>
+          <text x="36" y="510" font-size="10.5" fill="var(--ink-3)">โหลดแล้วได้ 0 แถวก็ยัง seed ให้ กัน Break ตกหาย</text>
+
+          <rect x="402" y="428" width="356" height="96" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="414" y="452" font-size="12" font-weight="650" fill="var(--ink)">6 · Labor</text>
+          <text x="414" y="472" font-size="10.5" fill="var(--ink-2)">มีของเดิม → loadExistingLabor</text>
+          <text x="414" y="490" font-size="10.5" fill="var(--ink-2)">ไม่มี → addDefaultLaborRow</text>
+          <text x="414" y="510" font-size="10.5" fill="var(--ink-3)">_fetchRoutingForLabor เติมแถวให้ครบทุก operation</text>
+
+          <rect x="780" y="428" width="356" height="96" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="792" y="452" font-size="12" font-weight="650" fill="var(--ink)">7 · สรุปเวลา</text>
+          <text x="792" y="472" font-size="10.5" fill="var(--ink-2)">updateMachineTimeSummary</text>
+          <text x="792" y="490" font-size="10.5" fill="var(--ink-2)">updateLaborTimeSummary</text>
+          <text x="792" y="510" font-size="10.5" fill="var(--ink-3)">คำนวณจาก span ที่ขั้น 4 ตั้งไว้</text>
+
+          <rect x="24" y="552" width="1112" height="60" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="36" y="576" font-size="12" font-weight="650" fill="var(--ink)">8 · สลับหน้าไปแท็บ Lot &amp; Pallet แล้วรอ 100ms จึงยัดข้อมูลลงตาราง</text>
+          <text x="36" y="596" font-size="10.5" fill="var(--ink-2)">initPalletData · initMaterialsData · recalculateRemainingQty · redraw ทุกตาราง · navigation.js:424</text>
+
+          <rect x="24" y="628" width="700" height="50" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.5"/>
+          <text x="36" y="650" font-size="12" font-weight="650" fill="var(--warn)">9 · checkAndLockStartDateTime()</text>
+          <text x="36" y="668" font-size="10.5" fill="var(--ink-2)">มีพาเลทที่สร้างแล้ว → ล็อก MFG Date + Start Date · Start Time ยังแก้ได้ · ui.js:500</text>
+
+          <rect x="746" y="628" width="390" height="50" rx="4" fill="var(--surface)" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="6 4"/>
+          <text x="758" y="650" font-size="12" font-weight="650" fill="var(--ink-2)">10 · startAutoRefresh(15000)</text>
+          <text x="758" y="668" font-size="10.5" fill="var(--ink-2)">ซิงก์พาเลทกับผู้ใช้คนอื่นทุก 15 วินาที</text>
+
+          <g fill="none" stroke="var(--ink-3)" stroke-width="1.6">
+            <path d="M144,116 V134" marker-end="url(#fw)"/>
+            <path d="M268,75 H426" marker-end="url(#fw)"/>
+            <path d="M610,116 V126" marker-end="url(#fw)"/>
+            <path d="M610,224 V234" marker-end="url(#fw)"/>
+            <path d="M794,275 H812 V93 H832" marker-end="url(#fw)"/>
+            <path d="M986,152 V166" marker-end="url(#fw)"/>
+          </g>
+          <g fill="none" stroke="var(--accent)" stroke-width="2">
+            <path d="M986,270 V300 H580 V326" marker-end="url(#fwA)"/>
+            <path d="M202,410 V424" marker-end="url(#fwA)"/>
+            <path d="M580,410 V424" marker-end="url(#fwA)"/>
+            <path d="M958,410 V424" marker-end="url(#fwA)"/>
+            <path d="M580,528 V548" marker-end="url(#fwA)"/>
+          </g>
+          <g fill="none" stroke="var(--warn)" stroke-width="1.8">
+            <path d="M374,616 V624" marker-end="url(#fwW)"/>
+          </g>
+        </svg>
+      </div>
+      <figcaption>
+        ลำดับนี้ไม่ได้สลับได้ตามใจ — <code>navigation.js:373</code> เรียก <code>setDefaultDateTime()</code>
+        ก่อนโหลด Machine Down และ Labor โดยตั้งใจ เพราะทั้งสองแท็บอ่าน Time Information เป็น span ฐาน
+        ถ้าโหลดก่อนจะได้ span เป็น 0 แล้วเวลาที่กระจายลง task เป็นศูนย์ทั้งหมด
+      </figcaption>
+    </figure>
+
+    <div class="cards">
+      <div class="card">
+        <span class="tag tag-hi">ด่านที่เด้งบ่อย</span>
+        <h3>วันผลิตปนกัน</h3>
+        <p><code>blockOnMixedProdDays</code> — ถ้า task ที่ค้นเจออยู่คนละวันผลิต ระบบหยุดทันที ให้ค้นทีละวัน</p>
+        <p>เช็คบน <strong>task ที่ Released แล้วเท่านั้น</strong> task ที่ยังไม่ปล่อยไม่นับ</p>
+      </div>
+      <div class="card">
+        <span class="tag tag-hi">ด่านที่เด้งบ่อย</span>
+        <h3>PWOC มากกว่าหนึ่งใบ</h3>
+        <p><code>blockOnMultiplePwocs</code> — ไล่จาก<strong>แถว task</strong> ไม่ได้ดูหัวใบ จึงเห็นใบที่หัวว่างด้วย</p>
+        <p>ข้ามด่านนี้เมื่อค้นด้วย <code>O…</code> เพราะ Order Sheet ครอบหลาย WO อยู่แล้ว</p>
+      </div>
+      <div class="card">
+        <span class="tag tag-lo">ลำดับสำคัญ</span>
+        <h3>วันต้องมาก่อนเวลา</h3>
+        <p>ขั้น 4 ตั้งวัน → ขั้น 5-6 โหลด Machine Down / Labor → ขั้น 7 คำนวณสรุปเวลา</p>
+        <p>สลับลำดับเมื่อไร span ฐานเป็น 0 และเวลาที่กระจายลง task เป็นศูนย์ทั้งหมด</p>
+      </div>
+      <div class="card">
+        <span class="tag tag-lo">ปิดท้าย</span>
+        <h3>ล็อกทีหลังเสมอ</h3>
+        <p><code>checkAndLockStartDateTime()</code> รันหลังตารางพร้อม เพราะต้องรู้ก่อนว่ามีพาเลทที่สร้างแล้วหรือยัง</p>
+        <p>โหมด Lot Transfer ข้ามการล็อกทั้งหมด</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
     <h2>ใบใหม่ กับ ใบที่เคยบันทึกแล้ว</h2>
     <figure>
       <div class="scroll">
