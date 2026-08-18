@@ -203,6 +203,140 @@
   </section>
 
   <section>
+    <h2>ค่าดีฟอลต์ถูกหยิบมาได้กี่แบบ</h2>
+    <p style="color:var(--ink-2);font-size:14px;max-width:70ch">
+      บันไดข้างบนบอกลำดับ แต่ไม่ได้บอกว่าแต่ละชั้นแตกย่อยได้อีก
+      นับจริงแล้วมี <strong>15 เส้นทาง</strong> — Start 5 · End 3 · MFG 7
+    </p>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th style="width:52px">#</th><th>เงื่อนไข</th><th>วันที่ได้</th><th>เวลาที่ได้</th></tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="4" style="background:var(--surface-2);font-weight:650">Start Date / Time — 5 แบบ</td></tr>
+          <tr><td><strong>S1</strong></td><td>ใบเคยบันทึกแล้ว</td>
+              <td><em>Start Date/Time</em> ของ PWOC Task</td><td>จากค่าที่บันทึก</td></tr>
+          <tr><td><strong>S2</strong></td><td>ยังไม่เคยบันทึก · batch มีทั้งวันและเวลา</td>
+              <td><em>Production Start Date</em> ของ Released Batch</td><td>เวลาของ batch</td></tr>
+          <tr><td><strong>S3</strong></td><td>ยังไม่เคยบันทึก · batch มีวันแต่ไม่มีเวลา</td>
+              <td><em>Production Start Date</em> ของ Released Batch</td><td><strong>เวลาปัจจุบัน</strong></td></tr>
+          <tr><td><strong>S4</strong></td><td>ไม่มี batch · WO มีวันเริ่ม</td>
+              <td><em>Production Start Date</em> ของ WO · หลาย WO เอาค่ามากสุด</td><td><strong>เวลาปัจจุบัน</strong></td></tr>
+          <tr><td><strong>S5</strong></td><td>ไม่มีอะไรเลย</td>
+              <td>วันนี้</td><td>เวลาปัจจุบัน</td></tr>
+
+          <tr><td colspan="4" style="background:var(--surface-2);font-weight:650">End Date / Time — 3 แบบ</td></tr>
+          <tr><td><strong>E1</strong></td><td>ใบเคยบันทึกแล้ว</td>
+              <td><em>End Date/Time</em> ของ PWOC Task</td><td>จากค่าที่บันทึก</td></tr>
+          <tr><td><strong>E2</strong></td><td>ยังไม่เคยบันทึก · WO มีวันจบ</td>
+              <td><em>Production End Date</em> ของ WO · หลาย WO เอาค่ามากสุด</td><td><strong>เวลาปัจจุบัน</strong></td></tr>
+          <tr><td><strong>E3</strong></td><td>ไม่มีอะไรเลย</td>
+              <td>วันนี้</td><td>เวลาปัจจุบัน</td></tr>
+
+          <tr><td colspan="4" style="background:var(--surface-2);font-weight:650">MFG Date — 7 แบบ</td></tr>
+          <tr><td><strong>M1</strong></td><td>ใบเคยบันทึกแล้ว</td>
+              <td><em>Completion Date</em> ของ PWOC</td><td>—</td></tr>
+          <tr><td><strong>M2</strong></td><td>ยังไม่เคยบันทึก · มี batch</td>
+              <td><em>Production Start Date</em> ของ Released Batch</td><td>—</td></tr>
+          <tr><td><strong>M3</strong></td><td>ไม่มี batch · WO มีวันเริ่ม</td>
+              <td><em>Production Start Date</em> ของ WO</td><td>—</td></tr>
+          <tr><td><strong>M4</strong></td><td>ไม่มีทั้งคู่ · ไม่ได้ตั้งค่ากะไว้</td>
+              <td>วันนี้</td><td>—</td></tr>
+          <tr><td><strong>M5</strong></td><td>ไม่มีทั้งคู่ · โหมด Over Shift · End Date มีค่า</td>
+              <td><strong>End Date ที่อยู่บนจอ</strong></td><td>—</td></tr>
+          <tr><td><strong>M6</strong></td><td>ไม่มีทั้งคู่ · โหมดปกติ · เวลาปัจจุบัน<strong>ก่อน</strong>เวลาเริ่มกะ</td>
+              <td><strong>เมื่อวาน</strong> — ยังนับเป็นวันผลิตของเมื่อวาน</td><td>—</td></tr>
+          <tr><td><strong>M7</strong></td><td>ไม่มีทั้งคู่ · โหมดปกติ · เวลาปัจจุบัน<strong>หลัง</strong>เวลาเริ่มกะ</td>
+              <td>วันนี้</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <div class="scroll">
+        <svg viewBox="0 0 1120 320" role="img" style="min-width:900px"
+             aria-label="แผนภาพการแตกย่อยของชั้นสำรองของ MFG Date ที่เรียก getDefaultMfgDate ซึ่งแยกเป็นสี่ทางตามการตั้งค่ากะ ไม่ได้ตั้งค่ากะได้วันนี้ โหมดข้ามกะได้วันจบ ก่อนเวลาเริ่มกะได้เมื่อวาน หลังเวลาเริ่มกะได้วันนี้">
+          <defs>
+            <marker id="vv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)"/>
+            </marker>
+          </defs>
+
+          <rect x="24" y="120" width="236" height="80" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.5"/>
+          <text x="36" y="146" font-size="12.5" font-weight="650" fill="var(--warn)">ชั้น 4 ของ MFG Date</text>
+          <text x="36" y="166" font-size="10.5" fill="var(--ink-2)">getDefaultMfgDate(now)</text>
+          <text x="36" y="184" font-size="10.5" fill="var(--ink-3)">ไม่ใช่ &quot;วันนี้&quot; เสมอไป</text>
+
+          <rect x="330" y="24" width="330" height="58" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="342" y="46" font-size="11.5" font-weight="650" fill="var(--ink)">ไม่ได้ตั้งค่ากะไว้</text>
+          <text x="342" y="66" font-size="10.5" fill="var(--ink-2)">WORKING_DAY_CONFIG.shiftStart ว่าง</text>
+
+          <rect x="330" y="96" width="330" height="58" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="342" y="118" font-size="11.5" font-weight="650" fill="var(--ink)">โหมด Over Shift</text>
+          <text x="342" y="138" font-size="10.5" fill="var(--ink-2)">กะข้ามวัน เกิน 24 ชั่วโมง</text>
+
+          <rect x="330" y="168" width="330" height="58" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="342" y="190" font-size="11.5" font-weight="650" fill="var(--ink)">โหมดปกติ · ก่อนเวลาเริ่มกะ</text>
+          <text x="342" y="210" font-size="10.5" fill="var(--ink-2)">เช่น กะเริ่ม 08:00 แต่ตอนนี้ 06:30</text>
+
+          <rect x="330" y="240" width="330" height="58" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="342" y="262" font-size="11.5" font-weight="650" fill="var(--ink)">โหมดปกติ · หลังเวลาเริ่มกะ</text>
+          <text x="342" y="282" font-size="10.5" fill="var(--ink-2)">เช่น กะเริ่ม 08:00 ตอนนี้ 14:00</text>
+
+          <rect x="732" y="24" width="364" height="58" rx="4" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="744" y="52" font-size="12" font-weight="650" fill="var(--ink)">M4 · วันนี้</text>
+
+          <rect x="732" y="96" width="364" height="58" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="744" y="120" font-size="12" font-weight="650" fill="var(--ink)">M5 · End Date ที่อยู่บนจอ</text>
+          <text x="744" y="140" font-size="10.5" fill="var(--ink-2)">End ว่าง → ตกกลับเป็นวันนี้</text>
+
+          <rect x="732" y="168" width="364" height="58" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.8"/>
+          <text x="744" y="192" font-size="12" font-weight="650" fill="var(--warn)">M6 · เมื่อวาน</text>
+          <text x="744" y="212" font-size="10.5" fill="var(--ink-2)">ยังนับเป็นวันผลิตของเมื่อวาน</text>
+
+          <rect x="732" y="240" width="364" height="58" rx="4" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="744" y="268" font-size="12" font-weight="650" fill="var(--ink)">M7 · วันนี้</text>
+
+          <g fill="none" stroke="var(--accent)" stroke-width="1.6">
+            <path d="M264,160 H300 V53 H326" marker-end="url(#vv)"/>
+            <path d="M264,160 H300 V125 H326" marker-end="url(#vv)"/>
+            <path d="M264,160 H300 V197 H326" marker-end="url(#vv)"/>
+            <path d="M264,160 H300 V269 H326" marker-end="url(#vv)"/>
+            <path d="M664,53 H728" marker-end="url(#vv)"/>
+            <path d="M664,125 H728" marker-end="url(#vv)"/>
+            <path d="M664,197 H728" marker-end="url(#vv)"/>
+            <path d="M664,269 H728" marker-end="url(#vv)"/>
+          </g>
+        </svg>
+      </div>
+      <figcaption>
+        ชั้นสำรองของ MFG Date ไม่ใช่ &quot;วันนี้&quot; เสมอไป — มันเรียก
+        <code>getDefaultMfgDate(now)</code> ซึ่งแตกอีก 4 ทางตามการตั้งค่ากะ
+        ทางที่เซอร์ไพรส์ที่สุดคือ <strong>M6</strong> ที่คืน<strong>เมื่อวาน</strong>
+        เมื่อเปิดใบก่อนเวลาเริ่มกะ
+      </figcaption>
+    </figure>
+
+    <div class="note">
+      <p>
+        <strong>เส้นทางที่เวลาไม่ได้มาจากที่เดียวกับวัน</strong> — S3 · S4 · E2 หยิบ<em>วัน</em>จาก record
+        แต่หยิบ<em>เวลา</em>จากนาฬิกาเครื่องผู้ใช้
+      </p>
+      <p>
+        แปลว่าเปิดใบเดียวกันคนละเวลา จะได้ Start Time ไม่เท่ากัน ทั้งที่วันเหมือนกัน
+        และเวลานั้นคือฐานที่ Labor กับ Machine Down ใช้คำนวณ span
+      </p>
+    </div>
+
+    <div class="note note-ok">
+      <strong>เส้นทางที่ปลอดภัยที่สุดคือ S1 · E1 · M1</strong> — ใบที่เคยบันทึกแล้วจะได้ค่าเดิมกลับมาเสมอ
+      ไม่ขึ้นกับนาฬิกา ไม่ขึ้นกับการที่ WO ถูกแก้วันทีหลัง
+    </div>
+  </section>
+
+  <section>
     <h2>ลำดับการทำงานตอนเปิดใบ</h2>
     <figure>
       <div class="scroll">
