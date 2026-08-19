@@ -3,91 +3,143 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>เอกสาร Foodstar</title>
+<title>เอกสาร Foodstar PWOC</title>
 <style>
   :root {
     --ground:#f3f1ec; --surface:#fffdf9; --surface-2:#e9e5dc;
     --ink:#1d2328; --ink-2:#4e5a61; --ink-3:#7d8891; --line:#d6d0c4;
     --accent:#0f6b6b; --accent-soft:#d9ebe9;
+    --warn:#a33a1f; --warn-soft:#f6e2da;
+    --ok:#3f6b32; --ok-soft:#e2eedc;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --ground:#13181a; --surface:#1c2225; --surface-2:#242c30;
       --ink:#e8eae6; --ink-2:#a8b4ba; --ink-3:#7c888e; --line:#303a3f;
       --accent:#5fb8b0; --accent-soft:#16302f;
+      --warn:#e0866a; --warn-soft:#35201a;
+      --ok:#86b877; --ok-soft:#1c2b1a;
     }
   }
   :root[data-theme="dark"] {
     --ground:#13181a; --surface:#1c2225; --surface-2:#242c30;
     --ink:#e8eae6; --ink-2:#a8b4ba; --ink-3:#7c888e; --line:#303a3f;
     --accent:#5fb8b0; --accent-soft:#16302f;
+    --warn:#e0866a; --warn-soft:#35201a;
+    --ok:#86b877; --ok-soft:#1c2b1a;
   }
+
   * { box-sizing:border-box; margin:0; padding:0; }
   body {
     background:var(--ground); color:var(--ink);
     font-family:system-ui,-apple-system,"Segoe UI",Tahoma,"Noto Sans Thai",sans-serif;
     font-size:15px; line-height:1.75;
+    -webkit-font-smoothing:antialiased;
   }
-  .wrap { max-width:820px; margin:0 auto; padding:64px 26px 90px;
-          display:flex; flex-direction:column; gap:34px; }
+  .wrap { max-width:900px; margin:0 auto; padding:72px 26px 96px;
+          display:flex; flex-direction:column; gap:40px; }
+
   .eyebrow { font-size:11.5px; letter-spacing:.14em; text-transform:uppercase;
              color:var(--ink-3); font-weight:650; }
-  h1 { font-size:clamp(28px,5vw,40px); line-height:1.15; letter-spacing:-.02em;
+  h1 { font-size:clamp(30px,5.4vw,44px); line-height:1.12; letter-spacing:-.025em;
        font-weight:650; text-wrap:balance; }
-  .lede { max-width:60ch; color:var(--ink-2); font-size:16px; }
-  h2 { font-size:15px; font-weight:650; }
-  .list { display:flex; flex-direction:column; gap:13px; }
+  .lede { max-width:62ch; color:var(--ink-2); font-size:16.5px; }
+
+  .rule { height:1px; background:var(--line); }
+
+  h2 { font-size:11.5px; letter-spacing:.14em; text-transform:uppercase;
+       color:var(--ink-3); font-weight:650; }
+  .list { display:flex; flex-direction:column; gap:14px; }
+
   a.doc {
-    display:flex; flex-direction:column; gap:6px; text-decoration:none; color:inherit;
-    background:var(--surface); border:1px solid var(--line); border-radius:5px;
-    padding:18px 20px; transition:border-color .15s ease, transform .15s ease;
+    position:relative; display:grid; gap:8px; text-decoration:none; color:inherit;
+    background:var(--surface); border:1px solid var(--line); border-radius:7px;
+    padding:22px 24px 20px 27px; overflow:hidden;
+    transition:border-color .16s ease, transform .16s ease, box-shadow .16s ease;
   }
-  a.doc:hover, a.doc:focus-visible { border-color:var(--accent); transform:translateY(-1px); }
+  a.doc::before {
+    content:""; position:absolute; inset:0 auto 0 0; width:3px;
+    background:var(--accent); opacity:.5; transition:opacity .16s ease;
+  }
+  a.doc:hover, a.doc:focus-visible {
+    border-color:var(--accent); transform:translateY(-2px);
+    box-shadow:0 6px 20px -12px rgba(0,0,0,.42);
+  }
+  a.doc:hover::before, a.doc:focus-visible::before { opacity:1; }
   a.doc:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
-  .doc-title { font-size:17px; font-weight:650; }
-  .doc-desc { font-size:14px; color:var(--ink-2); }
-  .doc-meta { font-size:12px; color:var(--ink-3); }
-  footer { border-top:1px solid var(--line); padding-top:15px;
-           color:var(--ink-3); font-size:13px; }
+
+  .doc-head { display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; }
+  .doc-title { font-size:19px; font-weight:650; letter-spacing:-.012em; }
+  .doc-desc { font-size:14.5px; color:var(--ink-2); max-width:68ch; }
+  .tags { display:flex; flex-wrap:wrap; gap:7px; margin-top:3px; }
+  .tag {
+    font-size:11.5px; font-weight:600; line-height:1;
+    padding:5px 9px; border-radius:999px;
+    border:1px solid var(--line); background:var(--surface-2); color:var(--ink-2);
+  }
+  .tag.ok  { background:var(--ok-soft);  border-color:var(--ok);  color:var(--ok); }
+  .tag.acc { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+
+  footer { color:var(--ink-3); font-size:13px; display:flex; flex-direction:column; gap:7px; }
+  footer code { font-family:ui-monospace,"Cascadia Mono",Consolas,monospace;
+                font-size:.9em; background:var(--surface-2); padding:1px 5px; border-radius:3px; }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <header style="display:flex;flex-direction:column;gap:10px">
-    <div class="eyebrow">Foodstar · เอกสารประกอบระบบ</div>
-    <h1>เอกสาร Foodstar</h1>
+  <header style="display:flex;flex-direction:column;gap:12px">
+    <div class="eyebrow">Foodstar · MFG Pre-Work Order Completion</div>
+    <h1>เอกสารประกอบระบบ</h1>
     <p class="lede">
-      หน้าเอกสารที่ทำไว้ประกอบงาน MFG Pre-Work Order Completion เปิดอ่านได้จากเบราว์เซอร์โดยตรง
-      ทุกหน้าอ่านได้ทั้งโหมดสว่างและมืด ตามธีมของเครื่องที่เปิด
+      หน้าอธิบายการทำงานของระบบที่ทำไว้ประกอบงานพัฒนา เปิดอ่านจากเบราว์เซอร์ได้เลย
+      ไม่ต้องติดตั้งอะไร ทุกหน้าปรับตามธีมสว่างหรือมืดของเครื่องที่เปิด
     </p>
   </header>
+
+  <div class="rule"></div>
 
   <section class="list">
     <h2>รายการเอกสาร</h2>
 
     <a class="doc" href="pwoc-rm-adjustment.html">
-      <span class="doc-title">RM Adjustment ตอน Save Feed</span>
+      <div class="doc-head">
+        <span class="doc-title">RM Adjustment ตอน Save Feed</span>
+      </div>
       <span class="doc-desc">
-        ทำไมการแก้ Feed รอบสองถึงล้ม — ผลทดลองบน SB1 ลูกโซ่สาเหตุ ทางแก้ที่ใช้จริง
-        และการทำงานแบบใหม่ทั้งหมด พร้อมสถานการณ์จริงหน้างานที่ยังเจอได้
+        ทำไมการแก้ Feed รอบสองถึงล้ม ไล่จากอาการบนหน้าจอไปจนถึงบรรทัดที่เป็นต้นเหตุ
+        พร้อมผลทดลองบนระบบจริง ทางแก้ที่ใช้ และการทำงานแบบใหม่ทั้งหมด
       </span>
-      <span class="doc-meta">7 diagram · เทียบเคสพร้อมยอด on-hand · ผลวัดกับใบจริง 11 item</span>
+      <div class="tags">
+        <span class="tag acc">14 หัวข้อ</span>
+        <span class="tag">8 ผังการทำงาน</span>
+        <span class="tag">เทียบเคสพร้อมยอดคงเหลือ</span>
+        <span class="tag ok">ทดสอบบนระบบจริงแล้ว</span>
+      </div>
     </a>
 
     <a class="doc" href="pwoc-date-flow.html">
-      <span class="doc-title">เส้นทางวันที่ใน PWOC</span>
+      <div class="doc-head">
+        <span class="doc-title">เส้นทางวันที่ใน PWOC</span>
+      </div>
       <span class="doc-desc">
-        แผนที่ field วันที่ทั้งระบบ — ค่าดีฟอลต์ตอนเปิดใบ เส้นทางตอนบันทึก
-        จนถึงจุดที่ NetSuite เขียนทับ Work Order พร้อม label ที่แสดงในหน้าจอ NetSuite
+        แผนที่ field วันที่ทั้งระบบ ตั้งแต่ค่าดีฟอลต์ตอนเปิดใบ เส้นทางตอนบันทึก
+        จนถึงจุดที่ NetSuite เขียนทับ Work Order พร้อม label ที่แสดงบนหน้าจอ NetSuite
       </span>
-      <span class="doc-meta">3 diagram · ตาราง 12 field · เทียบใบใหม่กับใบเดิม</span>
+      <div class="tags">
+        <span class="tag acc">3 ผังการทำงาน</span>
+        <span class="tag">ตาราง 12 field</span>
+        <span class="tag">เทียบใบใหม่กับใบเดิม</span>
+      </div>
     </a>
 
   </section>
 
+  <div class="rule"></div>
+
   <footer>
-    <p>เพิ่มเอกสารใหม่ได้โดยวางไฟล์ .html ไว้ที่ root ของ repo แล้วเพิ่มลิงก์ในหน้านี้</p>
+    <p>เพิ่มเอกสารใหม่ได้โดยวางไฟล์ <code>.html</code> ไว้ที่ root ของ repo แล้วเพิ่มการ์ดในหน้านี้</p>
+    <p>ลิงก์ของแต่ละหน้าคือชื่อไฟล์ต่อท้าย URL ของเว็บ ไม่ต้องตั้งค่าอะไรเพิ่ม</p>
   </footer>
 
 </div>

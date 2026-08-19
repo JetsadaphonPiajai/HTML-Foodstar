@@ -78,13 +78,102 @@
   .note p + p { margin-top:7px; }
 
   footer { border-top:1px solid var(--line); padding-top:15px; color:var(--ink-3); font-size:13px; }
+
+  /* ── หัวเรื่องมีเลขและรางสี อ่านเป็นลำดับได้ ── */
+  h2 { display:flex; align-items:baseline; gap:11px; scroll-margin-top:76px; }
+  h2::before {
+    content:attr(data-n); flex:0 0 auto;
+    font-size:11.5px; font-weight:700; letter-spacing:.06em;
+    color:var(--accent); background:var(--accent-soft);
+    border:1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+    border-radius:3px; padding:2px 7px; line-height:1.5; transform:translateY(-2px);
+  }
+  h3 { color:var(--ink); letter-spacing:-.005em; }
+
+  /* ── แถบบนสุด ติดหน้าจอ ── */
+  .topbar {
+    position:sticky; top:0; z-index:20;
+    background:color-mix(in srgb, var(--ground) 88%, transparent);
+    backdrop-filter:saturate(160%) blur(9px);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    padding:11px 26px; font-size:12.5px;
+  }
+  .topbar b { font-weight:650; }
+  .topbar .sep { color:var(--ink-3); }
+  .topbar a { color:var(--accent); text-decoration:none; }
+  .topbar a:hover { text-decoration:underline; }
+
+  /* ── ชิปสถานะ ── */
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip {
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:12px; font-weight:600; line-height:1;
+    padding:6px 11px; border-radius:999px; border:1px solid var(--line);
+    background:var(--surface-2); color:var(--ink-2);
+  }
+  .chip.ok   { background:var(--ok-soft);   border-color:var(--ok);   color:var(--ok); }
+  .chip.warn { background:var(--warn-soft); border-color:var(--warn); color:var(--warn); }
+  .chip.acc  { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+
+  /* ── สรุปสถานะบนสุด ── */
+  .summary {
+    background:var(--surface); border:1px solid var(--line); border-radius:6px;
+    padding:20px 22px; display:flex; flex-direction:column; gap:14px;
+  }
+  .summary h2 { font-size:15px; }
+  .summary h2::before { display:none; }
+  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; }
+  .kpi { background:var(--surface-2); border:1px solid var(--line); border-radius:5px; padding:12px 14px; }
+  .kpi .n { font-size:22px; font-weight:700; line-height:1.2; font-variant-numeric:tabular-nums; }
+  .kpi .l { font-size:12px; color:var(--ink-3); margin-top:2px; }
+
+  /* ── สารบัญ ── */
+  .toc { background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:18px 22px; }
+  .toc-title { font-size:11.5px; letter-spacing:.14em; text-transform:uppercase;
+               color:var(--ink-3); font-weight:650; margin-bottom:11px; }
+  .toc ol { margin:0; padding:0; list-style:none;
+            display:grid; grid-template-columns:repeat(auto-fit,minmax(232px,1fr)); gap:2px 20px; }
+  .toc li { counter-increment:toc; }
+  .toc a { display:flex; gap:9px; padding:5px 0; text-decoration:none;
+           color:var(--ink-2); font-size:13.5px; border-bottom:1px solid transparent; }
+  .toc a:hover { color:var(--accent); }
+  .toc a::before { content:counter(toc,decimal-leading-zero); color:var(--ink-3);
+                   font-size:11.5px; font-variant-numeric:tabular-nums; padding-top:2px; }
+  .toc ol { counter-reset:toc; }
+
+  /* ── ตาราง อ่านง่ายขึ้นเมื่อแถวเยอะ ── */
+  tbody tr:nth-child(even) td { background:color-mix(in srgb, var(--surface-2) 42%, transparent); }
+  tbody tr:hover td { background:var(--accent-soft); }
+
+  figcaption { font-size:13px; }
+  figcaption::before { content:attr(data-fig); display:block; font-size:11px; letter-spacing:.1em;
+                       text-transform:uppercase; color:var(--ink-3); font-weight:650; margin-bottom:5px; }
+
+  .wrap { padding-top:34px; }
+  @media (max-width:640px) { .topbar { padding:10px 16px; font-size:12px; } }
+
   footer p + p { margin-top:7px; }
 </style>
 
 <div class="wrap">
 
+  <div class="topbar">
+    <b>Foodstar PWOC</b>
+    <span class="sep">·</span>
+    <span>RM Adjustment ตอน Save Feed</span>
+    <span class="sep">·</span>
+    <span style="color:var(--ink-3)">ปรับปรุง 2026-08-20</span>
+    <span style="flex:1"></span>
+    <a href="#s01">เริ่มอ่าน</a>
+    <span class="sep">·</span>
+    <a href="#s10">การทำงานแบบใหม่</a>
+    <span class="sep">·</span>
+    <a href="#s11">สถานการณ์หน้างาน</a>
+  </div>
+
   <header>
-    <div class="eyebrow">Foodstar PWOC · GH #151</div>
+    <div class="eyebrow">Foodstar PWOC · GH #151 · #152 · #153</div>
     <h1>RM Adjustment ล้มตอน Save Feed รอบสอง</h1>
     <p class="lede">
       บันทึก Feed ผ่าน แต่ Inventory Adjustment ไม่ขยับตาม เกิดเมื่อกลับมา Save Feed
@@ -94,8 +183,46 @@
     </p>
   </header>
 
+  <div class="summary">
+    <div class="chips">
+      <span class="chip ok">แก้แล้วและขึ้น SB1</span>
+      <span class="chip acc">GH #151 · #152 · #153</span>
+      <span class="chip warn">ยังไม่ขึ้น production</span>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="n">3</div><div class="l">อาการที่เกิดจากต้นตอเดียวกัน</div></div>
+      <div class="kpi"><div class="n">9</div><div class="l">เคสที่ทดสอบบน SB1</div></div>
+      <div class="kpi"><div class="n">7</div><div class="l">เคสที่เดิมล้มทั้งที่ไม่ควรล้ม</div></div>
+      <div class="kpi"><div class="n">2.6 <span style="font-size:13px;font-weight:600">วิ</span></div><div class="l">เวลาบันทึกซ้ำหลังแก้ จากเดิม 18.1</div></div>
+    </div>
+    <p style="font-size:14px;color:var(--ink-2);max-width:74ch">
+      ต้นตอคือการรีเฟรช Inventory Adjustment รื้อบรรทัดทั้งใบทิ้งแล้วไปหยิบของที่ตัวเองถืออยู่กลับมาใหม่
+      ซึ่งหยิบไม่ได้เพราะของยังไม่ถูกปล่อยคืน · ทางแก้คือแตะเฉพาะส่วนที่ต่างจาก feed ชุดใหม่
+    </p>
+  </div>
+
+  <nav class="toc" aria-label="สารบัญ">
+    <div class="toc-title">สารบัญ</div>
+    <ol>
+        <li><a href="#s01">ข้อความที่ได้</a></li>
+        <li><a href="#s02">ลำดับบนหน้าจอ ตั้งแต่ Save รอบแรกจนพัง</a></li>
+        <li><a href="#s03">ทำไมถึงล้ม — ดูจากปริมาณของในลอต</a></li>
+        <li><a href="#s04">เคสจริง — PWOC539 · WO-FSC-00000706</a></li>
+        <li><a href="#s05">ข้อมูลชุดนี้ถูกเก็บไว้ที่ไหนบ้าง</a></li>
+        <li><a href="#s06">พิสูจน์ด้วยการทดลอง</a></li>
+        <li><a href="#s07">ลูกโซ่ของสาเหตุ</a></li>
+        <li><a href="#s08">เงื่อนไข 5 ข้อ ต้องครบพร้อมกันถึงจะเกิด</a></li>
+        <li><a href="#s09">ทางแก้ที่เสนอ</a></li>
+        <li><a href="#s10">การทำงานแบบใหม่ทั้งหมด</a></li>
+        <li><a href="#s11">สถานการณ์จริงหน้างาน</a></li>
+        <li><a href="#s12">ใครรับผิดชอบตรงไหน</a></li>
+        <li><a href="#s13">สมมติฐานที่ทำให้เกิดช่องโหว่</a></li>
+        <li><a href="#s14">workaround ระหว่างรอแก้</a></li>
+    </ol>
+  </nav>
+
   <section>
-    <h2>ข้อความที่ได้</h2>
+    <h2 id="s01" data-n="01">ข้อความที่ได้</h2>
     <pre><code>{"action":"CREATE RM ADJ","success":false,
  "message":"You still need to reconfigure the inventory detail record after changing the quantity.",
  "taskid":"3429","adjustmentId":null}</code></pre>
@@ -113,7 +240,7 @@
   </section>
 
   <section>
-    <h2>ลำดับบนหน้าจอ ตั้งแต่ Save รอบแรกจนพัง</h2>
+    <h2 id="s02" data-n="02">ลำดับบนหน้าจอ ตั้งแต่ Save รอบแรกจนพัง</h2>
     <figure>
       <div class="scroll">
         <svg viewBox="0 0 1060 660" role="img" style="min-width:880px"
@@ -200,7 +327,7 @@
           <text x="24" y="640" font-size="11.5" fill="var(--ink-2)">ขั้นที่ 5 คือรอยต่อที่ทำให้ทุกอย่างหลังจากนั้นผิด — จอกับของจริงเดินคนละทางตั้งแต่ตรงนั้น</text>
         </svg>
       </div>
-      <figcaption>
+      <figcaption data-fig="รูปที่ 1">
         <code>reloadFeedMaterialsFromServer()</code> ถูกเรียกเฉพาะตอนที่พบว่า Feed ถูก Confirm
         โดยผู้ใช้อื่น (<code>materials.js:2134</code>) — <strong>เส้นทาง Save สำเร็จปกติไม่เรียกเลย</strong>
         ตัวเลขคงเหลือบนตารางจึงเป็นค่าที่โหลดตอนเปิดแท็บ จนกว่าจะกดปุ่ม refresh เอง
@@ -220,7 +347,7 @@
   </section>
 
   <section>
-    <h2>ทำไมถึงล้ม — ดูจากปริมาณของในลอต</h2>
+    <h2 id="s03" data-n="03">ทำไมถึงล้ม — ดูจากปริมาณของในลอต</h2>
     <figure>
       <div class="scroll">
         <svg viewBox="0 0 1060 330" role="img" style="min-width:860px"
@@ -266,7 +393,7 @@
           <text x="36" y="297" font-size="12.5" font-weight="650" fill="var(--ok)">ถ้าลอต A มี 100 แทนที่จะเป็น 10 → รอบ 2 จ่ายได้ครบ → ผ่าน · นี่คือเหตุที่ "ของพอแล้วไม่ error"</text>
         </svg>
       </div>
-      <figcaption>
+      <figcaption data-fig="รูปที่ 2">
         เส้นทาง refresh โหลด IA ใบเดิมแล้ว <code>removeLine</code> ทุกบรรทัด แต่ของยังไม่ถูกปล่อยคืน
         จนกว่าจะ <code>save()</code> การจ่ายลอตชุดใหม่จึงเห็นของเหลือน้อยกว่าความจริง
       </figcaption>
@@ -274,7 +401,7 @@
   </section>
 
   <section>
-    <h2>เคสจริง — PWOC539 · WO-FSC-00000706</h2>
+    <h2 id="s04" data-n="04">เคสจริง — PWOC539 · WO-FSC-00000706</h2>
     <div class="scroll">
       <table>
         <thead>
@@ -298,7 +425,7 @@
   </section>
 
   <section>
-    <h2>ข้อมูลชุดนี้ถูกเก็บไว้ที่ไหนบ้าง</h2>
+    <h2 id="s05" data-n="05">ข้อมูลชุดนี้ถูกเก็บไว้ที่ไหนบ้าง</h2>
     <p style="color:var(--ink-2);font-size:14px;max-width:70ch">
       Feed หนึ่งชุดถูกเขียนลง <strong>สามที่</strong> ที่ไม่ได้ผูกกันด้วย transaction เดียว —
       แถวจริงใน PWOC · JSON ก้อนเดียวใน Completion Log · และ Inventory Adjustment ที่เป็นตัวขยับสต็อกจริง
@@ -391,7 +518,7 @@
           <text x="24" y="436" font-size="11.5" fill="var(--ink-2)">สองเส้นสีส้มคือช่วงที่ล้ม — log ถูกเขียนทับไปแล้ว แต่ IA ปลายทางไม่ขยับตาม</text>
         </svg>
       </div>
-      <figcaption>
+      <figcaption data-fig="รูปที่ 3">
         <code>buildFeedMatData()</code> อ่านแถวจาก <code>customrecord_mfg_prewoc_feedmat</code> มาประกอบเป็น JSON
         เขียนลง log ก่อน แล้วค่อยเรียก <code>createWorkOrderIssueBeforeWOC()</code> —
         การเขียน log commit ไปแล้วตั้งแต่บรรทัดก่อนหน้า ถ้าขั้นหลังล้มจึงเหลือ log ชุดใหม่คู่กับ IA ชุดเก่า
@@ -435,7 +562,7 @@
   </section>
 
   <section>
-    <h2>พิสูจน์ด้วยการทดลอง</h2>
+    <h2 id="s06" data-n="06">พิสูจน์ด้วยการทดลอง</h2>
     <p style="color:var(--ink-2);font-size:14px;max-width:72ch">
       ยิง <code>CREATE RM ADJ</code> ใส่ PWOC539 สามรอบเมื่อ 2026-08-19 เส้นทาง code เดียวกันทุกรอบ
       (<code>refreshAdjId = 200184</code>) เปลี่ยนตัวแปรทีละตัว
@@ -527,7 +654,7 @@
           <text x="86" y="344" font-size="11" fill="var(--ok)">PL-13082026-193 = 5 · PL-13082026-195 = 5 · UAT10072601 = 67,994.23337</text>
         </svg>
       </div>
-      <figcaption>
+      <figcaption data-fig="รูปที่ 4">
         <code>removeLine()</code> เป็นการแก้ใน memory ล้วน ๆ — ของที่ IA ถือไว้จะถูกปล่อยคืนตอน
         <code>save()</code> เท่านั้น แต่ <code>commitLine()</code> ของทุกลอตเกิดก่อนหน้านั้นทั้งหมด
         (<code>mfg_action_completion.js:1082–1210</code>) การ refresh จึงสำเร็จได้เฉพาะเมื่อลอตปลายทาง
@@ -569,7 +696,7 @@
   </section>
 
   <section>
-    <h2>ลูกโซ่ของสาเหตุ</h2>
+    <h2 id="s07" data-n="07">ลูกโซ่ของสาเหตุ</h2>
     <p style="color:var(--ink-2);font-size:14px;max-width:72ch">
       ข้อความที่ผู้ใช้เห็นอยู่ปลายสุดของโซ่ ห่างจากต้นตอสามชั้น
       ไล่ด้วยเคสจริงของ <code>22090900001</code> PE ขุ่น 250 มม. — รอบแรกเบิก
@@ -667,7 +794,7 @@
           <text x="574" y="602" font-size="11" font-weight="650" fill="var(--warn)">returned no adjustment</text>
         </svg>
       </div>
-      <figcaption>
+      <figcaption data-fig="รูปที่ 5">
         สองข้อความปลายทางมาจากต้นตอเดียวกัน ต่างกันแค่ว่ามีลอตรอดมาบ้างไหม —
         ข้อ 2 คือจุดที่ต้องแก้ ส่วนข้อ 4 คือจุดที่ทำให้ไล่หาสาเหตุยาก เพราะกลืนข้อความทิ้ง
       </figcaption>
@@ -710,7 +837,7 @@
   </section>
 
   <section>
-    <h2>เงื่อนไข 5 ข้อ ต้องครบพร้อมกันถึงจะเกิด</h2>
+    <h2 id="s08" data-n="08">เงื่อนไข 5 ข้อ ต้องครบพร้อมกันถึงจะเกิด</h2>
     <div class="scroll">
       <table>
         <thead><tr><th style="width:44px">#</th><th>เงื่อนไข</th><th>ถ้าไม่เข้าเงื่อนไข</th></tr></thead>
@@ -726,7 +853,7 @@
   </section>
 
   <section>
-    <h2>ทางแก้ที่เสนอ</h2>
+    <h2 id="s09" data-n="09">ทางแก้ที่เสนอ</h2>
     <div class="note">
       <p><strong>ทางที่คิดไว้ตอนแรกใช้ไม่ได้</strong></p>
       <p>
@@ -804,7 +931,7 @@
           <text x="38" y="462" font-size="11.5" fill="var(--ink-2)">ต้องมีของว่าง ≥ <tspan font-weight="700">max(0, ยอดใหม่ − ยอดที่ใบนี้ถืออยู่ในลอตเดียวกัน)</tspan> แทนที่จะเป็น ≥ ยอดใหม่ทั้งก้อน</text>
         </svg>
       </div>
-      <figcaption>
+      <figcaption data-fig="รูปที่ 6">
         จุดที่ต้องแก้คือขั้นที่ 2 ไม่ใช่ <code>cancelLine</code> ที่ขั้น 4 ของหายไปตั้งแต่ตอนรื้อ
         แก้เงื่อนไขปลายน้ำได้แค่เปลี่ยนหน้าตาของ error
       </figcaption>
@@ -1250,7 +1377,7 @@ pass 2   load ใหม่ → เพิ่ม     → save</code></pre>
   </section>
 
   <section>
-    <h2>การทำงานแบบใหม่ทั้งหมด</h2>
+    <h2 id="s10" data-n="10">การทำงานแบบใหม่ทั้งหมด</h2>
     <p style="color:var(--ink-2);font-size:14px;max-width:72ch">
       ทุกอย่างที่ขึ้น SB1 แล้วเมื่อ 2026-08-19 · กล่องเขียวคือของที่เพิ่มใหม่ กล่องเทาคือของเดิมที่ไม่แตะ
     </p>
@@ -1407,7 +1534,7 @@ pass 2   load ใหม่ → เพิ่ม     → save</code></pre>
           </g>
         </svg>
       </div>
-      <figcaption>
+      <figcaption data-fig="รูปที่ 7">
         เส้นทาง CREATE WOC (กล่องเทาขวาชั้น 3) ไม่ถูกแตะเลย เพราะไม่ส่ง <code>refreshAdjId</code>
         การเปลี่ยนพฤติกรรมทั้งหมดอยู่ในสาขาที่มีแต่ PWOC เข้า
       </figcaption>
@@ -1491,7 +1618,7 @@ pass 2   load ใหม่ → เพิ่ม     → save</code></pre>
   </section>
 
   <section>
-    <h2>สถานการณ์จริงหน้างาน</h2>
+    <h2 id="s11" data-n="11">สถานการณ์จริงหน้างาน</h2>
     <p style="color:var(--ink-2);font-size:14px;max-width:72ch">
       หลังแก้แล้ว เคสที่ล้มโดยไม่มีเหตุผลหายไปหมด สิ่งที่เหลือคือ
       <strong>ของไม่พอจริง</strong> กับ <strong>ข้อมูลลอตผิด</strong> ซึ่งคนหน้างานต้องลงมือแก้เองทุกครั้ง
@@ -1540,7 +1667,7 @@ pass 2   load ใหม่ → เพิ่ม     → save</code></pre>
           <text x="530" y="176" font-size="10.5" fill="var(--warn)">ของถูกหยิบไปแล้ว แต่จอของ ก ไม่รู้</text>
         </svg>
       </div>
-      <figcaption>
+      <figcaption data-fig="รูปที่ 8">
         นี่คือเคสที่เหลืออยู่บ่อยที่สุดหลังแก้ · ไม่ใช่บั๊ก แต่เป็นการแย่งของกันจริง
         ปัญหาอยู่ที่ผู้ใช้รู้ตอนกด Save ไม่ใช่ตอนเลือกลอต
       </figcaption>
@@ -1629,7 +1756,7 @@ pass 2   load ใหม่ → เพิ่ม     → save</code></pre>
   </section>
 
   <section>
-    <h2>ใครรับผิดชอบตรงไหน</h2>
+    <h2 id="s12" data-n="12">ใครรับผิดชอบตรงไหน</h2>
     <div class="scroll">
       <table>
         <thead><tr><th>จุด</th><th>อยู่ที่ไหน</th><th>สถานะ</th></tr></thead>
@@ -1670,7 +1797,7 @@ pass 2   load ใหม่ → เพิ่ม     → save</code></pre>
   </section>
 
   <section>
-    <h2>สมมติฐานที่ทำให้เกิดช่องโหว่</h2>
+    <h2 id="s13" data-n="13">สมมติฐานที่ทำให้เกิดช่องโหว่</h2>
     <p style="color:var(--ink-2);font-size:14px;max-width:70ch">
       คอมเมนต์ใน <code>materials.js:2617</code> เขียนไว้เองว่า
     </p>
@@ -1688,7 +1815,7 @@ the real stock check happens at submit (validateFeedMaterialsInventory).</code><
   </section>
 
   <section>
-    <h2>workaround ระหว่างรอแก้</h2>
+    <h2 id="s14" data-n="14">workaround ระหว่างรอแก้</h2>
     <p style="color:var(--ink-2);font-size:14px">
       Feed ยังบันทึกครบเสมอ — ที่ไม่เกิดคือ Inventory Adjustment เท่านั้น
       แก้ IA ใบนั้นด้วยมือ หรือ void แล้วให้ระบบสร้างใหม่
