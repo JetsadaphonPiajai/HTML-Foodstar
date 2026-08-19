@@ -169,7 +169,9 @@
     <span class="sep">·</span>
     <a href="#s10">การทำงานแบบใหม่</a>
     <span class="sep">·</span>
-    <a href="#s11">สถานการณ์หน้างาน</a>
+    <a href="#s11">ขั้นตอนทำงานจริง</a>
+    <span class="sep">·</span>
+    <a href="#s12">สถานการณ์หน้างาน</a>
   </div>
 
   <header>
@@ -214,10 +216,11 @@
         <li><a href="#s08">เงื่อนไข 5 ข้อ ต้องครบพร้อมกันถึงจะเกิด</a></li>
         <li><a href="#s09">ทางแก้ที่เสนอ</a></li>
         <li><a href="#s10">การทำงานแบบใหม่ทั้งหมด</a></li>
-        <li><a href="#s11">สถานการณ์จริงหน้างาน</a></li>
-        <li><a href="#s12">ใครรับผิดชอบตรงไหน</a></li>
-        <li><a href="#s13">สมมติฐานที่ทำให้เกิดช่องโหว่</a></li>
-        <li><a href="#s14">workaround ระหว่างรอแก้</a></li>
+        <li><a href="#s11">ขั้นตอนทำงานจริง</a></li>
+        <li><a href="#s12">สถานการณ์จริงหน้างาน</a></li>
+        <li><a href="#s13">ใครรับผิดชอบตรงไหน</a></li>
+        <li><a href="#s14">สมมติฐานที่ทำให้เกิดช่องโหว่</a></li>
+        <li><a href="#s15">workaround ระหว่างรอแก้</a></li>
     </ol>
   </nav>
 
@@ -1618,7 +1621,166 @@ pass 2   load ใหม่ → เพิ่ม     → save</code></pre>
   </section>
 
   <section>
-    <h2 id="s11" data-n="11">สถานการณ์จริงหน้างาน</h2>
+    <h2 id="s11" data-n="11">ขั้นตอนทำงานจริง</h2>
+    <p style="color:var(--ink-2);font-size:14px;max-width:72ch">
+      ลำดับที่คนหน้างานกดจริงตั้งแต่เปิดใบจนของถูกตัดออกจากคลัง
+      พร้อมจุดที่ต้องหยุดดูก่อนไปต่อ · ปุ่มในผังคือปุ่มจริงบนแท็บ Feed Materials
+    </p>
+    <figure>
+      <div class="scroll">
+        <svg viewBox="0 0 1060 776" role="img" style="min-width:900px"
+             aria-label="ผังขั้นตอนการทำงานจริงเจ็ดขั้น ตั้งแต่เปิดใบ โหลดยอดคงเหลือ เลือกลอต กดบันทึก ระบบตรวจสต็อกก่อน แล้วจึงตัดสต็อกเบื้องหลัง มีเส้นย้อนกลับสองเส้นเมื่อของไม่พอหรือตัดสต็อกไม่สำเร็จ">
+          <defs>
+            <marker id="ac" viewBox="0 0 10 10" refX="5" refY="9" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 0 L 10 0 L 5 10 z" fill="var(--ink-3)"/>
+            </marker>
+            <marker id="acw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--warn)"/>
+            </marker>
+          </defs>
+
+          <text x="24"  y="26" font-size="11.5" font-weight="700" letter-spacing="1.2" fill="var(--ink-3)">คนกด</text>
+          <text x="616" y="26" font-size="11.5" font-weight="700" letter-spacing="1.2" fill="var(--ink-3)">ต้องเห็นอะไรถึงไปต่อได้</text>
+
+          <rect x="24" y="42" width="540" height="58" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.4"/>
+          <text x="38" y="65" font-size="12" font-weight="650" fill="var(--ink)">1 · เปิดใบ</text>
+          <text x="38" y="86" font-size="10.5" fill="var(--ink-2)">สแกนหรือค้นด้วยเลข Work Order แล้วเลือก Task</text>
+          <rect x="616" y="42" width="440" height="58" rx="4" fill="var(--surface)" stroke="var(--line)" stroke-width="1.3"/>
+          <text x="630" y="72" font-size="10.5" fill="var(--ink-2)">แท็บ Feed Materials ขึ้นจำนวนรายการในวงเล็บ</text>
+
+          <rect x="24" y="118" width="540" height="66" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.8"/>
+          <text x="38" y="141" font-size="12" font-weight="700" fill="var(--accent)">2 · กด 🔄 Load Lot Available</text>
+          <text x="38" y="162" font-size="10.5" fill="var(--ink-2)">ดึงยอดคงเหลือล่าสุดของทุกลอต</text>
+          <text x="38" y="178" font-size="10.5" fill="var(--warn)">ข้ามขั้นนี้ = ทำงานกับตัวเลขที่อาจตายแล้ว</text>
+          <rect x="616" y="118" width="440" height="66" rx="4" fill="var(--surface)" stroke="var(--line)" stroke-width="1.3"/>
+          <text x="630" y="148" font-size="10.5" fill="var(--ink-2)">คอลัมน์ Stock ของแต่ละลอตเปลี่ยนเป็นค่าล่าสุด</text>
+          <text x="630" y="168" font-size="10.5" fill="var(--ink-3)">ถ้าเพิ่งมีคนเบิกไป ตัวเลขจะลดลงให้เห็น</text>
+
+          <rect x="24" y="202" width="540" height="72" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.4"/>
+          <text x="38" y="225" font-size="12" font-weight="650" fill="var(--ink)">3 · เลือกลอต</text>
+          <text x="38" y="246" font-size="10.5" fill="var(--ink-2)">📦 FIFO ให้ระบบจัดให้ หรือกรอก Enter Actual QTY เอง</text>
+          <text x="38" y="264" font-size="10.5" fill="var(--ink-3)">ของขาดจะขึ้นกล่องเตือน กด OK ผ่านได้ ยังไม่บล็อก</text>
+          <rect x="616" y="202" width="440" height="72" rx="4" fill="var(--surface)" stroke="var(--line)" stroke-width="1.3"/>
+          <text x="630" y="232" font-size="10.5" fill="var(--ink-2)">ช่องที่กรอกเป็นสีเหลือง</text>
+          <text x="630" y="252" font-size="10.5" fill="var(--ink-3)">ยอดรวมของ item ตรงกับที่ตั้งใจเบิก</text>
+
+          <rect x="24" y="292" width="540" height="58" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.8"/>
+          <text x="38" y="315" font-size="12" font-weight="700" fill="var(--accent)">4 · กด 💾 Save Feed</text>
+          <text x="38" y="336" font-size="10.5" fill="var(--ink-2)">ยังไม่มีอะไรถูกเขียนจนกว่าจะผ่านขั้นที่ 5</text>
+
+          <rect x="24" y="368" width="540" height="76" rx="4" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="1.8"/>
+          <text x="38" y="391" font-size="12" font-weight="700" fill="var(--ok)">5 · ระบบตรวจสต็อกให้ก่อน</text>
+          <text x="38" y="412" font-size="10.5" fill="var(--ink-2)">นับของที่ใบนี้เบิกไปแล้วเป็นของใช้ได้ของตัวเอง</text>
+          <text x="38" y="430" font-size="10.5" fill="var(--ink-3)">ไม่พอ = หยุดทันที ไม่เขียนอะไรลงระบบเลย</text>
+          <rect x="616" y="368" width="440" height="76" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.5"/>
+          <text x="630" y="392" font-size="11.5" font-weight="650" fill="var(--warn)">ถ้าไม่พอ</text>
+          <text x="630" y="412" font-size="10.5" fill="var(--ink-2)">กล่องแดงพร้อมตาราง ต้องการ · ใช้ได้ · ขาด</text>
+          <text x="630" y="430" font-size="10.5" fill="var(--ink-2)">แก้จำนวนหรือเลือกลอตอื่น แล้วย้อนไปขั้น 2</text>
+
+          <rect x="24" y="462" width="540" height="58" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.4"/>
+          <text x="38" y="485" font-size="12" font-weight="650" fill="var(--ink)">6 · แถวถูกบันทึก</text>
+          <text x="38" y="506" font-size="10.5" fill="var(--ink-2)">แถบเขียว บันทึก Feed สำเร็จ · ของยังไม่ถูกตัด</text>
+          <rect x="616" y="462" width="440" height="58" rx="4" fill="var(--surface)" stroke="var(--line)" stroke-width="1.3"/>
+          <text x="630" y="492" font-size="10.5" fill="var(--ink-3)">อย่าเพิ่งปิดหน้าจอ รอขั้นถัดไปให้จบก่อน</text>
+
+          <rect x="24" y="538" width="540" height="80" rx="4" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="1.8"/>
+          <text x="38" y="561" font-size="12" font-weight="700" fill="var(--ok)">7 · ระบบตัดสต็อกให้เบื้องหลัง</text>
+          <text x="38" y="582" font-size="10.5" fill="var(--ink-2)">แก้ Inventory Adjustment ใบเดิม แตะเฉพาะส่วนที่ต่าง</text>
+          <text x="38" y="600" font-size="10.5" fill="var(--ink-3)">ใบแรกของ task จะถูกสร้างใหม่ · รอบถัด ๆ ไปใช้ใบเดิม</text>
+          <rect x="616" y="538" width="440" height="80" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.5"/>
+          <text x="630" y="562" font-size="11.5" font-weight="650" fill="var(--warn)">ถ้าตัดไม่สำเร็จ</text>
+          <text x="630" y="582" font-size="10.5" fill="var(--ink-2)">ข้อความบอกลอตและจำนวนที่ขาด</text>
+          <text x="630" y="600" font-size="10.5" fill="var(--ink-2)">แถว Feed ถูกคืนให้อัตโนมัติ ย้อนไปขั้น 2</text>
+
+          <rect x="24" y="636" width="540" height="58" rx="4" fill="var(--surface)" stroke="var(--ok)" stroke-width="1.5"/>
+          <text x="38" y="659" font-size="12" font-weight="650" fill="var(--ok)">8 · เสร็จ · ของถูกตัดจริงแล้ว</text>
+          <text x="38" y="680" font-size="10.5" fill="var(--ink-2)">แถบเขียว Feed + RM Adjustment สำเร็จ</text>
+          <rect x="616" y="636" width="440" height="58" rx="4" fill="var(--surface)" stroke="var(--line)" stroke-width="1.3"/>
+          <text x="630" y="660" font-size="10.5" fill="var(--ink-2)">ยอดคงเหลือบนตารางโหลดใหม่ให้เอง</text>
+          <text x="630" y="680" font-size="10.5" fill="var(--ink-3)">อยากมั่นใจ เปิด Inventory Adjustment เทียบบรรทัด</text>
+
+          <g fill="none" stroke="var(--ink-3)" stroke-width="1.4">
+            <path d="M294,100 V112" marker-end="url(#ac)"/>
+            <path d="M294,184 V196" marker-end="url(#ac)"/>
+            <path d="M294,274 V286" marker-end="url(#ac)"/>
+            <path d="M294,350 V362" marker-end="url(#ac)"/>
+            <path d="M294,444 V456" marker-end="url(#ac)"/>
+            <path d="M294,520 V532" marker-end="url(#ac)"/>
+            <path d="M294,618 V630" marker-end="url(#ac)"/>
+          </g>
+
+          <g fill="none" stroke="var(--warn)" stroke-width="1.6" stroke-dasharray="5 4">
+            <path d="M600,406 H590 Q580,406 580,396 V161 Q580,151 570,151 H570" marker-end="url(#acw)"/>
+            <path d="M600,578 H592 Q604,578 604,566 V151 Q604,141 594,141 H570" marker-end="url(#acw)"/>
+          </g>
+          <text x="588" y="330" font-size="10" fill="var(--warn)" transform="rotate(-90 588 330)">แก้แล้วย้อนกลับขั้น 2</text>
+
+          <text x="24" y="736" font-size="11.5" fill="var(--ink-2)">ขั้นที่ 5 คือด่านใหม่ ก่อนหน้านี้ไม่มี — เดิมกด Save แล้วเขียนทันที รู้ว่าของไม่พอตอนขั้นที่ 7 ซึ่งสายไปแล้ว</text>
+          <text x="24" y="760" font-size="11.5" fill="var(--ink-3)">เส้นประสีส้มคือทางย้อนกลับ ทั้งสองเส้นไม่ทำให้เสียงานที่กรอกไว้ ตัวเลขบนตารางยังอยู่ครบ</text>
+        </svg>
+      </div>
+      <figcaption data-fig="รูปที่ 8">
+        ปุ่มที่ต้องกดมีสามปุ่ม — <b>🔄 Load Lot Available</b> · <b>📦 FIFO</b> หรือกรอกเอง · <b>💾 Save Feed</b>
+        ที่เหลือระบบทำให้ทั้งหมด
+      </figcaption>
+    </figure>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th style="width:52px">ขั้น</th><th>กดอะไร</th><th>ระบบทำอะไร</th><th>ผ่านเมื่อเห็น</th><th>ถ้าไม่ผ่าน</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td><td>ค้น WO แล้วเลือก Task</td><td>โหลดใบและรายการวัตถุดิบ</td>
+            <td>แท็บ Feed Materials ขึ้นจำนวนในวงเล็บ</td><td>ตรวจว่าใบนี้มี Task ถูกตัว</td>
+          </tr>
+          <tr>
+            <td>2</td><td><b>🔄 Load Lot Available</b></td><td>ดึงยอดคงเหลือล่าสุดทุกลอต</td>
+            <td>คอลัมน์ Stock เปลี่ยนเป็นค่าล่าสุด</td><td>กดซ้ำ ถ้ายังไม่ขึ้นให้โหลดหน้าใหม่</td>
+          </tr>
+          <tr>
+            <td>3</td><td><b>📦 FIFO</b> หรือกรอกเอง</td><td>เติมลอตตามลำดับเข้าก่อนออกก่อน</td>
+            <td>ช่องที่กรอกเป็นสีเหลือง ยอดรวมตรงกับที่ตั้งใจ</td><td>กล่องเตือนของขาด กด OK ผ่านได้ ยังไม่บล็อก</td>
+          </tr>
+          <tr>
+            <td>4</td><td><b>💾 Save Feed</b></td><td>ส่งรายการไปตรวจ</td>
+            <td>แถบขึ้นว่ากำลังตรวจสต็อก</td><td>ปุ่มไม่ตอบ ให้ดูว่ามีช่องไหนกรอกค้างอยู่</td>
+          </tr>
+          <tr>
+            <td>5</td><td>ไม่ต้องกด</td><td><b>ตรวจสต็อกก่อนเขียน</b> นับของที่ใบนี้เบิกไปแล้วด้วย</td>
+            <td>ผ่านไปขั้น 6 เอง</td><td>กล่องแดง ต้องการ · ใช้ได้ · ขาด · <b>ยังไม่มีอะไรถูกเขียน</b> แก้แล้วย้อนขั้น 2</td>
+          </tr>
+          <tr>
+            <td>6</td><td>ไม่ต้องกด</td><td>เขียนแถว Feed ลงใบ</td>
+            <td>แถบเขียว บันทึก Feed สำเร็จ</td><td>แถบแดงบอกจำนวน WO ที่ไม่สำเร็จ กด Save ซ้ำ</td>
+          </tr>
+          <tr>
+            <td>7</td><td>ไม่ต้องกด</td><td><b>ตัดสต็อกจริง</b> แก้ Inventory Adjustment ใบเดิม</td>
+            <td>แถบเขียว Feed + RM Adjustment สำเร็จ</td><td>ข้อความบอกลอตที่ขาด · แถว Feed ถูกคืนอัตโนมัติ · ย้อนขั้น 2</td>
+          </tr>
+          <tr>
+            <td>8</td><td>ตรวจ (ถ้าต้องการ)</td><td>โหลดยอดคงเหลือใหม่ให้เอง</td>
+            <td>ยอดในตารางลดลงตามที่เบิก</td><td>เปิด Inventory Adjustment เทียบบรรทัดกับที่กรอกไว้</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note note-ok">
+      <p><strong>กฎเดียวที่ต้องจำ</strong></p>
+      <p>
+        <strong>กรอกลอตให้ครบทุกลอตของ item นั้นก่อน แล้วค่อยกด Save Feed ครั้งเดียว</strong>
+        การบันทึกทีละลอตแล้วกลับมาเพิ่มทีหลังคือทางที่ทำให้เจอปัญหามากที่สุด
+      </p>
+      <p>
+        และกด <b>🔄 Load Lot Available</b> ทุกครั้งก่อนเลือกลอต โดยเฉพาะถ้าเปิดหน้าจอค้างไว้นาน
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s12" data-n="12">สถานการณ์จริงหน้างาน</h2>
     <p style="color:var(--ink-2);font-size:14px;max-width:72ch">
       หลังแก้แล้ว เคสที่ล้มโดยไม่มีเหตุผลหายไปหมด สิ่งที่เหลือคือ
       <strong>ของไม่พอจริง</strong> กับ <strong>ข้อมูลลอตผิด</strong> ซึ่งคนหน้างานต้องลงมือแก้เองทุกครั้ง
@@ -1667,7 +1829,7 @@ pass 2   load ใหม่ → เพิ่ม     → save</code></pre>
           <text x="530" y="176" font-size="10.5" fill="var(--warn)">ของถูกหยิบไปแล้ว แต่จอของ ก ไม่รู้</text>
         </svg>
       </div>
-      <figcaption data-fig="รูปที่ 8">
+      <figcaption data-fig="รูปที่ 9">
         นี่คือเคสที่เหลืออยู่บ่อยที่สุดหลังแก้ · ไม่ใช่บั๊ก แต่เป็นการแย่งของกันจริง
         ปัญหาอยู่ที่ผู้ใช้รู้ตอนกด Save ไม่ใช่ตอนเลือกลอต
       </figcaption>
@@ -1756,7 +1918,7 @@ pass 2   load ใหม่ → เพิ่ม     → save</code></pre>
   </section>
 
   <section>
-    <h2 id="s12" data-n="12">ใครรับผิดชอบตรงไหน</h2>
+    <h2 id="s13" data-n="13">ใครรับผิดชอบตรงไหน</h2>
     <div class="scroll">
       <table>
         <thead><tr><th>จุด</th><th>อยู่ที่ไหน</th><th>สถานะ</th></tr></thead>
@@ -1797,7 +1959,7 @@ pass 2   load ใหม่ → เพิ่ม     → save</code></pre>
   </section>
 
   <section>
-    <h2 id="s13" data-n="13">สมมติฐานที่ทำให้เกิดช่องโหว่</h2>
+    <h2 id="s14" data-n="14">สมมติฐานที่ทำให้เกิดช่องโหว่</h2>
     <p style="color:var(--ink-2);font-size:14px;max-width:70ch">
       คอมเมนต์ใน <code>materials.js:2617</code> เขียนไว้เองว่า
     </p>
@@ -1815,7 +1977,7 @@ the real stock check happens at submit (validateFeedMaterialsInventory).</code><
   </section>
 
   <section>
-    <h2 id="s14" data-n="14">workaround ระหว่างรอแก้</h2>
+    <h2 id="s15" data-n="15">workaround ระหว่างรอแก้</h2>
     <p style="color:var(--ink-2);font-size:14px">
       Feed ยังบันทึกครบเสมอ — ที่ไม่เกิดคือ Inventory Adjustment เท่านั้น
       แก้ IA ใบนั้นด้วยมือ หรือ void แล้วให้ระบบสร้างใหม่
