@@ -1,0 +1,1717 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>*{margin:0;padding:0}img{max-width:100%}</style>
+<title>RM Adjustment ตอน Save Feed</title>
+</head>
+<body>
+
+<style>
+  :root {
+    --ground:#f3f1ec; --surface:#fffdf9; --surface-2:#e9e5dc;
+    --ink:#1d2328; --ink-2:#4e5a61; --ink-3:#7d8891; --line:#d6d0c4;
+    --accent:#0f6b6b; --accent-soft:#d9ebe9;
+    --warn:#a33a1f; --warn-soft:#f6e2da;
+    --ok:#3f6b32; --ok-soft:#e2eedc;
+    --code-bg:#e7e3da;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:#13181a; --surface:#1c2225; --surface-2:#242c30;
+      --ink:#e8eae6; --ink-2:#a8b4ba; --ink-3:#7c888e; --line:#303a3f;
+      --accent:#5fb8b0; --accent-soft:#16302f;
+      --warn:#e0866a; --warn-soft:#35201a;
+      --ok:#86b877; --ok-soft:#1c2b1a;
+      --code-bg:#232b2f;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#13181a; --surface:#1c2225; --surface-2:#242c30;
+    --ink:#e8eae6; --ink-2:#a8b4ba; --ink-3:#7c888e; --line:#303a3f;
+    --accent:#5fb8b0; --accent-soft:#16302f;
+    --warn:#e0866a; --warn-soft:#35201a;
+    --ok:#86b877; --ok-soft:#1c2b1a;
+    --code-bg:#232b2f;
+  }
+
+  * { box-sizing:border-box; }
+  body {
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Tahoma,"Noto Sans Thai",sans-serif;
+    font-size:15px; line-height:1.75;
+  }
+  .wrap { max-width:1120px; margin:0 auto; padding:48px 26px 90px; display:flex; flex-direction:column; gap:36px; }
+  header { display:flex; flex-direction:column; gap:10px; }
+  .eyebrow { font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); font-weight:650; }
+  h1 { margin:0; font-size:clamp(26px,4vw,36px); line-height:1.15; letter-spacing:-.02em; font-weight:650; text-wrap:balance; }
+  .lede { margin:0; max-width:64ch; color:var(--ink-2); font-size:16px; }
+  h2 { margin:0; font-size:19px; font-weight:650; letter-spacing:-.01em; }
+  section { display:flex; flex-direction:column; gap:14px; }
+  p { margin:0; }
+
+  figure { margin:0; background:var(--surface); border:1px solid var(--line); border-radius:5px;
+           padding:22px 18px 16px; display:flex; flex-direction:column; gap:13px; }
+  .scroll { overflow-x:auto; }
+  figure svg { display:block; max-width:100%; height:auto; color:var(--ink); }
+  figcaption { color:var(--ink-2); font-size:13.5px; max-width:78ch; border-top:1px solid var(--line); padding-top:11px; }
+
+  table { width:100%; border-collapse:collapse; font-size:14px;
+          background:var(--surface); border:1px solid var(--line); border-radius:5px; overflow:hidden; }
+  th,td { text-align:left; padding:10px 13px; border-bottom:1px solid var(--line); vertical-align:top; }
+  thead th { background:var(--surface-2); font-size:11.5px; letter-spacing:.09em;
+             text-transform:uppercase; color:var(--ink-2); font-weight:650; }
+  tbody tr:last-child td { border-bottom:0; }
+  td.num { text-align:right; font-variant-numeric:tabular-nums; }
+
+  code,.mono { font-family:ui-monospace,"Cascadia Mono",Consolas,monospace;
+               font-size:.875em; background:var(--code-bg); padding:1px 5px; border-radius:3px; }
+  pre { margin:0; background:var(--code-bg); border:1px solid var(--line); border-radius:5px;
+        padding:13px 15px; overflow-x:auto;
+        font-family:ui-monospace,"Cascadia Mono",Consolas,monospace; font-size:13px; line-height:1.65; }
+  pre code { background:none; padding:0; }
+
+  .note { border-left:3px solid var(--warn); background:var(--warn-soft);
+          padding:12px 15px; border-radius:0 4px 4px 0; font-size:14px; }
+  .note-ok { border-left-color:var(--accent); background:var(--accent-soft); }
+  .note p + p { margin-top:7px; }
+
+  footer { border-top:1px solid var(--line); padding-top:15px; color:var(--ink-3); font-size:13px; }
+  footer p + p { margin-top:7px; }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Foodstar PWOC · GH #151</div>
+    <h1>RM Adjustment ล้มตอน Save Feed รอบสอง</h1>
+    <p class="lede">
+      บันทึก Feed ผ่าน แต่ Inventory Adjustment ไม่ขยับตาม เกิดเมื่อกลับมา Save Feed
+      หลังจากเคย Save สำเร็จไปแล้ว และลอตที่เลือกไม่มีของว่างนอกเหนือจากที่ Inventory Adjustment
+      ใบเดิมถือไว้ — พิสูจน์ด้วยการทดลองบน PWOC539 เมื่อ 2026-08-19 แล้วว่าไม่จำเป็นต้องแก้ feed
+      อะไรเลยก็เกิดได้
+    </p>
+  </header>
+
+  <section>
+    <h2>ข้อความที่ได้</h2>
+    <pre><code>{"action":"CREATE RM ADJ","success":false,
+ "message":"You still need to reconfigure the inventory detail record after changing the quantity.",
+ "taskid":"3429","adjustmentId":null}</code></pre>
+    <p style="color:var(--ink-2);font-size:14px">
+      บนหน้าจอเห็นเป็น <code>RM Adjustment ไม่ครบ — 1 รายการ (กด Save Feed ซ้ำเพื่อ retry)</code>
+      แต่กด retry กี่ครั้งก็ล้มซ้ำ
+    </p>
+    <p style="color:var(--ink-2);font-size:14px">
+      อาการเดียวกันยังโผล่มาอีกข้อความหนึ่งด้วย — ต่างกันแค่ว่ามีลอตไหน commit ผ่านบ้าง
+      (ดูตารางในหัวข้อ <strong>พิสูจน์ด้วยการทดลอง</strong>)
+    </p>
+    <pre><code>{"action":"CREATE RM ADJ","success":false,
+ "message":"createWorkOrderIssueBeforeWOC returned no adjustment",
+ "taskid":"3429","adjustmentId":null}</code></pre>
+  </section>
+
+  <section>
+    <h2>ลำดับบนหน้าจอ ตั้งแต่ Save รอบแรกจนพัง</h2>
+    <figure>
+      <div class="scroll">
+        <svg viewBox="0 0 1060 660" role="img" style="min-width:880px"
+             aria-label="ไทม์ไลน์เจ็ดขั้นเทียบสิ่งที่ผู้ใช้ทำบนหน้าจอกับสิ่งที่เกิดเบื้องหลังและสต็อกจริง ขั้นที่สี่ระบบสร้าง Inventory Adjustment ตัดสต็อกลง แต่ขั้นที่ห้าหน้าจอไม่โหลดตัวเลขใหม่ ผู้ใช้จึงกด FIFO รอบสองโดยอิงตัวเลขเก่าและ Save แล้วล้ม">
+          <defs>
+            <marker id="dn2" viewBox="0 0 10 10" refX="5" refY="9" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 0 L 10 0 L 5 10 z" fill="var(--ink-3)"/>
+            </marker>
+          </defs>
+
+          <text x="24"  y="26" font-size="11.5" font-weight="700" letter-spacing="1.2" fill="var(--ink-3)">ผู้ใช้ทำบนหน้าจอ</text>
+          <text x="516" y="26" font-size="11.5" font-weight="700" letter-spacing="1.2" fill="var(--ink-3)">เบื้องหลัง · สต็อกจริงของ Clouding</text>
+
+          <!-- 1 -->
+          <rect x="24" y="42" width="452" height="62" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="38" y="66" font-size="12.5" font-weight="650" fill="var(--ink)">1 · เปิดแท็บ Feed Materials</text>
+          <text x="38" y="88" font-size="11" fill="var(--ink-2)">โหลดยอดคงเหลือของทุกลอต ครั้งเดียว</text>
+
+          <rect x="516" y="42" width="520" height="62" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="530" y="66" font-size="12" fill="var(--ink-2)">คงเหลือ</text>
+          <text x="600" y="66" font-size="13" font-weight="650" fill="var(--ok)">5.67578</text>
+          <text x="530" y="88" font-size="11" fill="var(--ink-3)">ตัวเลขนี้จะถูกเก็บไว้ในตารางจนกว่าจะโหลดหน้าใหม่</text>
+
+          <!-- 2 -->
+          <rect x="24" y="122" width="452" height="52" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="38" y="146" font-size="12.5" font-weight="650" fill="var(--ink)">2 · กด FIFO</text>
+          <text x="38" y="164" font-size="11" fill="var(--ink-2)">ระบบเติมลอตให้ตามยอดคงเหลือที่โหลดมา</text>
+
+          <!-- 3 -->
+          <rect x="24" y="192" width="452" height="52" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="38" y="216" font-size="12.5" font-weight="650" fill="var(--ink)">3 · กด Save Feed</text>
+          <text x="38" y="234" font-size="11" fill="var(--ink-2)">แถบเขียว บันทึก Feed สำเร็จ</text>
+
+          <rect x="516" y="192" width="520" height="52" rx="4" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="1.5"/>
+          <text x="530" y="222" font-size="12" fill="var(--ink-2)">PWOC Feed Material บันทึกครบ</text>
+
+          <!-- 4 -->
+          <rect x="516" y="262" width="520" height="72" rx="4" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="1.5"/>
+          <text x="530" y="286" font-size="12.5" font-weight="650" fill="var(--ok)">4 · เบื้องหลัง · CREATE RM ADJ</text>
+          <text x="530" y="306" font-size="11" fill="var(--ink-2)">สร้าง Inventory Adjustment ตัด −5</text>
+          <text x="530" y="324" font-size="12" fill="var(--ink-2)">คงเหลือจริงเหลือ</text>
+          <text x="668" y="324" font-size="13" font-weight="650" fill="var(--warn)">0.67578</text>
+
+          <rect x="24" y="262" width="452" height="72" rx="4" fill="none" stroke="var(--ink-3)" stroke-width="1.3" stroke-dasharray="5 5"/>
+          <text x="250" y="296" text-anchor="middle" font-size="11.5" fill="var(--ink-3)">ผู้ใช้ไม่เห็นขั้นนี้</text>
+          <text x="250" y="316" text-anchor="middle" font-size="11" fill="var(--ink-3)">รันเบื้องหลัง ไม่บล็อกหน้าจอ</text>
+
+          <!-- 5 -->
+          <rect x="24" y="352" width="452" height="72" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.8"/>
+          <text x="38" y="376" font-size="12.5" font-weight="650" fill="var(--warn)">5 · หน้าจอยังโชว์ 5.67578</text>
+          <text x="38" y="396" font-size="11" fill="var(--ink-2)">Save Feed สำเร็จไม่ได้โหลดยอดคงเหลือใหม่</text>
+          <text x="38" y="414" font-size="11" fill="var(--ink-2)">ต้องกดปุ่ม refresh เองเท่านั้น</text>
+
+          <rect x="516" y="352" width="520" height="72" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.8"/>
+          <text x="530" y="380" font-size="12.5" font-weight="650" fill="var(--warn)">ตัวเลขบนจอกับของจริงต่างกัน 5 หน่วย</text>
+          <text x="530" y="402" font-size="11" fill="var(--ink-2)">จอ 5.67578 · จริง 0.67578</text>
+
+          <!-- 6 -->
+          <rect x="24" y="442" width="452" height="72" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.5"/>
+          <text x="38" y="466" font-size="12.5" font-weight="650" fill="var(--warn)">6 · กด FIFO รอบสอง</text>
+          <text x="38" y="486" font-size="11" fill="var(--ink-2)">เลือกลอตจากตัวเลขเก่าที่ยังค้างอยู่</text>
+          <text x="38" y="504" font-size="11" fill="var(--ink-2)">จึงขอของเกินกว่าที่มีจริง</text>
+
+          <!-- 7 -->
+          <rect x="24" y="532" width="452" height="72" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="38" y="556" font-size="12.5" font-weight="650" fill="var(--ink)">7 · กด Save Feed อีกครั้ง</text>
+          <text x="38" y="576" font-size="11" fill="var(--ok)">PWOC Feed Material บันทึกครบอีกครั้ง</text>
+          <text x="38" y="594" font-size="11" fill="var(--ink-2)">ไม่มีด่านตรวจว่าของพอ</text>
+
+          <rect x="516" y="532" width="520" height="72" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.8"/>
+          <text x="530" y="556" font-size="12.5" font-weight="650" fill="var(--warn)">CREATE RM ADJ ล้ม</text>
+          <text x="530" y="576" font-size="11" fill="var(--ink-2)">refresh IA เดิม → จ่ายลอตไม่ครบ</text>
+          <text x="530" y="594" font-size="11" fill="var(--ink-2)">reconfigure the inventory detail record…</text>
+
+          <g fill="none" stroke="var(--ink-3)" stroke-width="1.4">
+            <path d="M250,108 V116" marker-end="url(#dn2)"/>
+            <path d="M250,178 V186" marker-end="url(#dn2)"/>
+            <path d="M250,248 V256" marker-end="url(#dn2)"/>
+            <path d="M250,338 V346" marker-end="url(#dn2)"/>
+            <path d="M250,428 V436" marker-end="url(#dn2)"/>
+            <path d="M250,518 V526" marker-end="url(#dn2)"/>
+          </g>
+
+          <text x="24" y="640" font-size="11.5" fill="var(--ink-2)">ขั้นที่ 5 คือรอยต่อที่ทำให้ทุกอย่างหลังจากนั้นผิด — จอกับของจริงเดินคนละทางตั้งแต่ตรงนั้น</text>
+        </svg>
+      </div>
+      <figcaption>
+        <code>reloadFeedMaterialsFromServer()</code> ถูกเรียกเฉพาะตอนที่พบว่า Feed ถูก Confirm
+        โดยผู้ใช้อื่น (<code>materials.js:2134</code>) — <strong>เส้นทาง Save สำเร็จปกติไม่เรียกเลย</strong>
+        ตัวเลขคงเหลือบนตารางจึงเป็นค่าที่โหลดตอนเปิดแท็บ จนกว่าจะกดปุ่ม refresh เอง
+      </figcaption>
+    </figure>
+
+    <div class="note">
+      <p><strong>สองอย่างที่ทับกันพอดี</strong></p>
+      <p>
+        RM Adjustment รันเบื้องหลังแบบไม่บล็อกหน้าจอ (ตั้งใจ เพื่อให้ Save Feed เร็ว)
+        และหน้าจอไม่โหลดยอดคงเหลือใหม่หลัง Save
+      </p>
+      <p>
+        ผลคือ <strong>ตอนที่ผู้ใช้กด FIFO รอบสอง สต็อกถูกตัดไปแล้ว แต่จอยังไม่รู้</strong>
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>ทำไมถึงล้ม — ดูจากปริมาณของในลอต</h2>
+    <figure>
+      <div class="scroll">
+        <svg viewBox="0 0 1060 330" role="img" style="min-width:860px"
+             aria-label="แผนภาพแท่งแสดงสต็อกในลอตหนึ่ง เริ่มต้นสิบหน่วย รอบแรกเบิกแปดหน่วยผ่าน เหลือสอง รอบสองต้องการเก้าหน่วยแต่ของที่ถูกจองไว้ยังไม่ถูกปล่อยคืน จึงจ่ายได้แค่สอง ทำให้ยอดที่จ่ายไม่เท่ากับยอดที่ต้องเบิกและถูกปฏิเสธ">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink-3)"/>
+            </marker>
+          </defs>
+
+          <text x="24" y="24" font-size="12" font-weight="650" fill="var(--ink-2)">สต็อกในลอต A = 10</text>
+
+          <!-- round 1 -->
+          <text x="24" y="66" font-size="12.5" font-weight="650" fill="var(--ok)">รอบ 1 · เบิก 8</text>
+          <rect x="24" y="78" width="500" height="34" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+          <rect x="24" y="78" width="400" height="34" rx="3" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="1.5"/>
+          <text x="36" y="100" font-size="12" font-weight="650" fill="var(--ok)">เบิกแล้ว 8</text>
+          <text x="436" y="100" font-size="12" fill="var(--ink-2)">เหลือ 2</text>
+          <text x="546" y="100" font-size="12.5" font-weight="650" fill="var(--ok)">✓ IA สร้างสำเร็จ</text>
+
+          <!-- round 2 -->
+          <text x="24" y="152" font-size="12.5" font-weight="650" fill="var(--warn)">รอบ 2 · แก้เป็นเบิก 9</text>
+
+          <rect x="24" y="164" width="500" height="34" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+          <rect x="24" y="164" width="400" height="34" rx="3" fill="none" stroke="var(--warn)" stroke-width="1.5" stroke-dasharray="6 4"/>
+          <text x="36" y="186" font-size="11.5" fill="var(--warn)">8 ที่ IA ใบเดิมจองไว้ · ลบ line แล้วแต่ยังไม่ปล่อยคืน</text>
+          <text x="436" y="186" font-size="12" fill="var(--ink-2)">เห็นแค่ 2</text>
+
+          <rect x="24" y="212" width="450" height="30" rx="3" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.5"/>
+          <text x="36" y="232" font-size="12" font-weight="650" fill="var(--warn)">ต้องจ่าย 9 แต่จ่ายได้แค่ 2</text>
+
+          <rect x="546" y="150" width="490" height="96" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.8"/>
+          <text x="560" y="174" font-size="12.5" font-weight="650" fill="var(--warn)">NetSuite ปฏิเสธตอน save</text>
+          <text x="560" y="196" font-size="11" fill="var(--ink-2)">Σ inventoryassignment (2) ≠ line quantity (9)</text>
+          <text x="560" y="216" font-size="11" fill="var(--ink-2)">You still need to reconfigure the inventory</text>
+          <text x="560" y="232" font-size="11" fill="var(--ink-2)">detail record after changing the quantity.</text>
+
+          <g fill="none" stroke="var(--ink-3)" stroke-width="1.5">
+            <path d="M480,227 H542" marker-end="url(#ar)"/>
+          </g>
+
+          <rect x="24" y="272" width="1012" height="40" rx="4" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="1.5"/>
+          <text x="36" y="297" font-size="12.5" font-weight="650" fill="var(--ok)">ถ้าลอต A มี 100 แทนที่จะเป็น 10 → รอบ 2 จ่ายได้ครบ → ผ่าน · นี่คือเหตุที่ "ของพอแล้วไม่ error"</text>
+        </svg>
+      </div>
+      <figcaption>
+        เส้นทาง refresh โหลด IA ใบเดิมแล้ว <code>removeLine</code> ทุกบรรทัด แต่ของยังไม่ถูกปล่อยคืน
+        จนกว่าจะ <code>save()</code> การจ่ายลอตชุดใหม่จึงเห็นของเหลือน้อยกว่าความจริง
+      </figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>เคสจริง — PWOC539 · WO-FSC-00000706</h2>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th>Item</th><th class="num">ก่อนปรับ</th><th class="num">Adjust</th><th class="num">คงเหลือ</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>23020100004</code> Sweetener</td><td class="num">68,052.5073</td><td class="num">−5</td><td class="num">68,047.5073</td></tr>
+          <tr><td><code>23040100017</code> Clouding</td><td class="num">5.67578</td><td class="num">−5</td><td class="num"><strong>0.67578</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--ink-2);font-size:14px">
+      Clouding มีของทั้งหมด <strong>5.67578</strong> · รอบแรกเบิกไป 5 เหลือ <strong>0.67578</strong>
+      รอบสองต้องการมากกว่านั้น จึงจ่ายไม่ครบ
+    </p>
+    <div class="note">
+      <strong>ของที่บันทึกไว้สองฝั่งไม่ตรงกัน</strong> — Inventory Adjustment มี 2 บรรทัด
+      ส่วน Completion Log มี 16 item และ PWOC Feed Material มี 35 แถว
+      (Sweetener บันทึกไว้ 46.54545 lot UAT10072601 แต่ IA ตัดจริง 5 lot 13082601)
+    </div>
+  </section>
+
+  <section>
+    <h2>ข้อมูลชุดนี้ถูกเก็บไว้ที่ไหนบ้าง</h2>
+    <p style="color:var(--ink-2);font-size:14px;max-width:70ch">
+      Feed หนึ่งชุดถูกเขียนลง <strong>สามที่</strong> ที่ไม่ได้ผูกกันด้วย transaction เดียว —
+      แถวจริงใน PWOC · JSON ก้อนเดียวใน Completion Log · และ Inventory Adjustment ที่เป็นตัวขยับสต็อกจริง
+      ทั้งสามเดินคนละจังหวะได้ นี่คือที่ที่ความไม่ตรงกันไปค้างอยู่
+    </p>
+    <figure>
+      <div class="scroll">
+        <svg viewBox="0 0 1080 452" role="img" style="min-width:900px"
+             aria-label="แผนผังตารางข้อมูล หัวใบ PWOC เชื่อมไปตารางลูก prewoc task และ feed material แล้วแปลงเป็น JSON ในตาราง completion proclog ก่อนกลายเป็น Inventory Adjustment ที่ตัดสต็อกจริง ตอนพังทั้งสามที่เก็บจำนวนไม่เท่ากันคือ 35 แถว 16 item และ 2 บรรทัด">
+          <defs>
+            <marker id="fk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink-3)"/>
+            </marker>
+            <marker id="fkw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--warn)"/>
+            </marker>
+          </defs>
+
+          <text x="24"  y="26" font-size="11.5" font-weight="700" letter-spacing="1.2" fill="var(--ink-3)">ฝั่ง PWOC · custom record</text>
+          <text x="756" y="26" font-size="11.5" font-weight="700" letter-spacing="1.2" fill="var(--ink-3)">ฝั่ง NetSuite · transaction</text>
+
+          <rect x="24" y="56" width="300" height="120" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="38" y="79"  font-size="12" font-weight="700" fill="var(--accent)">customrecord_mfg_prewoc</text>
+          <text x="38" y="99"  font-size="11.5" fill="var(--ink)">หัวใบ PWOC — id 539</text>
+          <text x="38" y="121" font-size="10.5" fill="var(--ink-2)">custrecord_mfg_prewoc_location = 10 · PD_B1</text>
+          <text x="38" y="140" font-size="10.5" fill="var(--ink-2)">1 ใบ = 1 Work Order</text>
+          <text x="38" y="161" font-size="10.5" fill="var(--ink-3)">WO-FSC-00000706 · id 199333</text>
+
+          <rect x="390" y="56" width="300" height="120" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="404" y="79"  font-size="12" font-weight="700" fill="var(--accent)">customrecord_mfg_prewoc_task</text>
+          <text x="404" y="99"  font-size="11.5" fill="var(--ink)">แถวลูก 1 แถวต่อ 1 task — id 3429</text>
+          <text x="404" y="121" font-size="10.5" fill="var(--ink-2)">…_task_task = TM-4256</text>
+          <text x="404" y="140" font-size="10.5" fill="var(--ink-2)">…_task_woc = WOC-FSC-00001362</text>
+          <text x="404" y="161" font-size="10.5" fill="var(--warn)">…_task_adjustment = 200184</text>
+
+          <rect x="756" y="56" width="300" height="120" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="770" y="79"  font-size="12" font-weight="700" fill="var(--ink-2)">transaction · Work Order Completion</text>
+          <text x="770" y="99"  font-size="11.5" fill="var(--ink)">WOC-FSC-00001362</text>
+          <text x="770" y="121" font-size="10.5" fill="var(--ink-2)">ต้องมีก่อน RM ADJ ถึงจะรัน</text>
+          <text x="770" y="140" font-size="10.5" fill="var(--ink-3)">ไม่มี WOC = Skip ไม่ล้ม (เงื่อนไขข้อ 1)</text>
+
+          <rect x="24" y="246" width="300" height="160" rx="4" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="38" y="269"  font-size="12" font-weight="700" fill="var(--accent)">customrecord_mfg_prewoc_feedmat</text>
+          <text x="38" y="289"  font-size="11.5" fill="var(--ink)">แถวจริง 1 แถวต่อ 1 lot/bin</text>
+          <text x="38" y="311"  font-size="10.5" fill="var(--ink-2)">…_feedmat_item · …_feedmat_lot</text>
+          <text x="38" y="330"  font-size="10.5" fill="var(--ink-2)">…_feedmat_bin · …_feedmat_qty</text>
+          <text x="38" y="349"  font-size="10.5" fill="var(--ink-2)">…_feedmat_task = 4256</text>
+          <rect x="38" y="362" width="122" height="26" rx="3" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.2"/>
+          <text x="99" y="379" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--warn)">35 แถว</text>
+          <text x="170" y="379" font-size="10.5" fill="var(--ink-3)">ตอนพัง</text>
+
+          <rect x="390" y="246" width="300" height="160" rx="4" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="404" y="269"  font-size="12" font-weight="700" fill="var(--accent)">customrecord_mfg_completion_proclog</text>
+          <text x="404" y="289"  font-size="11.5" fill="var(--ink)">id 4597 — สรุปของ 1 WOC</text>
+          <text x="404" y="311"  font-size="10.5" fill="var(--ink-2)">custrecord_mfg_clog_feedmaterial</text>
+          <text x="404" y="330"  font-size="10.5" fill="var(--ink-3)">= JSON ก้อนเดียว ไม่ใช่แถว</text>
+          <text x="404" y="349"  font-size="10.5" fill="var(--ink-3)">key = itemid_locid · ข้างในมี lots[]</text>
+          <rect x="404" y="362" width="122" height="26" rx="3" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.2"/>
+          <text x="465" y="379" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--warn)">16 item</text>
+          <text x="536" y="379" font-size="10.5" fill="var(--ink-3)">ตอนพัง</text>
+
+          <rect x="756" y="246" width="300" height="160" rx="4" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="1.8"/>
+          <text x="770" y="269"  font-size="12" font-weight="700" fill="var(--ok)">transaction · Inventory Adjustment</text>
+          <text x="770" y="289"  font-size="11.5" fill="var(--ink)">IA-FSC-260800811 · id 200184</text>
+          <text x="770" y="311"  font-size="10.5" fill="var(--ink-2)">1 บรรทัดต่อ 1 item</text>
+          <text x="770" y="330"  font-size="10.5" fill="var(--ink-2)">inventoryassignment = lot · bin · qty</text>
+          <text x="770" y="349"  font-size="10.5" fill="var(--ok)">ตัวเดียวที่ขยับสต็อกจริง</text>
+          <rect x="770" y="362" width="122" height="26" rx="3" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="1.4"/>
+          <text x="831" y="379" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--ok)">2 บรรทัด</text>
+          <text x="902" y="379" font-size="10.5" fill="var(--ok)">ของจริง</text>
+
+          <g fill="none" stroke="var(--ink-3)" stroke-width="1.4">
+            <path d="M324,100 H384" marker-end="url(#fk)"/>
+            <path d="M690,100 H750" marker-end="url(#fk)"/>
+            <path d="M174,246 V182" marker-end="url(#fk)"/>
+            <path d="M324,306 H384" marker-end="url(#fk)"/>
+          </g>
+          <g fill="none" stroke="var(--warn)" stroke-width="1.6">
+            <path d="M690,306 H750" marker-end="url(#fkw)"/>
+            <path d="M540,176 V211 H906 V240" marker-end="url(#fkw)"/>
+          </g>
+
+          <text x="330" y="93"  font-size="10" fill="var(--ink-3)">…_task_parent</text>
+          <text x="696" y="93"  font-size="10" fill="var(--ink-3)">…_task_woc</text>
+          <text x="182" y="216" font-size="10" fill="var(--ink-3)">…_feedmat_parent</text>
+          <text x="330" y="299" font-size="10" fill="var(--ink-3)">buildFeedMatData()</text>
+          <text x="662" y="299" font-size="10" fill="var(--warn)">createWorkOrderIssueBeforeWOC()</text>
+          <text x="556" y="205" font-size="10" fill="var(--warn)">…_task_adjustment → refreshAdjId · แก้ IA ใบเดิม ไม่สร้างใหม่</text>
+
+          <text x="24" y="436" font-size="11.5" fill="var(--ink-2)">สองเส้นสีส้มคือช่วงที่ล้ม — log ถูกเขียนทับไปแล้ว แต่ IA ปลายทางไม่ขยับตาม</text>
+        </svg>
+      </div>
+      <figcaption>
+        <code>buildFeedMatData()</code> อ่านแถวจาก <code>customrecord_mfg_prewoc_feedmat</code> มาประกอบเป็น JSON
+        เขียนลง log ก่อน แล้วค่อยเรียก <code>createWorkOrderIssueBeforeWOC()</code> —
+        การเขียน log commit ไปแล้วตั้งแต่บรรทัดก่อนหน้า ถ้าขั้นหลังล้มจึงเหลือ log ชุดใหม่คู่กับ IA ชุดเก่า
+        (#151 เติม rollback ให้ขั้นนี้แล้ว)
+      </figcaption>
+    </figure>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>เก็บที่</th><th>หน่วยของข้อมูล</th>
+            <th class="num">ตอนพัง</th><th class="num">หลังเคลียร์</th><th>ขยับสต็อกไหม</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>customrecord_mfg_prewoc_feedmat</code></td>
+            <td>แถว · 1 lot/bin ต่อแถว</td>
+            <td class="num">35 แถว</td><td class="num">2 แถว</td><td>ไม่</td>
+          </tr>
+          <tr>
+            <td><code>customrecord_mfg_completion_proclog</code></td>
+            <td>JSON ก้อนเดียวใน 1 field</td>
+            <td class="num">16 item</td><td class="num">2 item</td><td>ไม่</td>
+          </tr>
+          <tr>
+            <td>transaction · Inventory Adjustment</td>
+            <td>บรรทัด + inventoryassignment</td>
+            <td class="num">2 บรรทัด</td><td class="num">2 บรรทัด</td><td><strong>ใช่</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--ink-2);font-size:14px;max-width:72ch">
+      IA ไม่เคยขยับเลยตลอดเหตุการณ์ ที่ต้องถอยจึงเป็นสองแถวบน —
+      เคลียร์ PWOC539 เมื่อ 2026-08-19 คือการลบ 33 แถวที่ไม่เคยถูกตัดสต็อกทิ้ง
+      ให้ทั้งสามที่เหลือชุดเดียวกัน: Sweetener 5 lot 13082601 bin PL-13082026-193 ·
+      Clouding 5 lot 13082601 bin PL-13082026-195
+    </p>
+  </section>
+
+  <section>
+    <h2>พิสูจน์ด้วยการทดลอง</h2>
+    <p style="color:var(--ink-2);font-size:14px;max-width:72ch">
+      ยิง <code>CREATE RM ADJ</code> ใส่ PWOC539 สามรอบเมื่อ 2026-08-19 เส้นทาง code เดียวกันทุกรอบ
+      (<code>refreshAdjId = 200184</code>) เปลี่ยนตัวแปรทีละตัว
+      ผลออกมาว่าสาเหตุไม่ใช่ &ldquo;ของไม่พอ&rdquo; แต่เป็น <strong>ลำดับของการปล่อยของกับการหยิบของสลับกัน</strong>
+    </p>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th style="width:74px">รอบ</th><th>feed ที่ตั้งไว้</th><th>ลอตมีของว่างนอกจากที่ IA ถือไหม</th><th>ผล</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>คุม</td>
+            <td>Sweetener 5 <code>@PL-13082026-193</code> · Clouding 5 <code>@PL-13082026-195</code><br>
+                <span style="color:var(--ink-3)">ตรงกับที่ IA ถืออยู่ทุก field</span></td>
+            <td>ไม่มี · on-hand 0 ทั้งคู่</td>
+            <td><code>no adjustment</code></td>
+          </tr>
+          <tr>
+            <td>B</td>
+            <td>Clouding 0.67578 <code>@Line01</code> · 5 <code>@PL-13082026-195</code></td>
+            <td>ไม่มีทั้งสองลอต · Clouding on-hand 0 ทั้ง item</td>
+            <td><code>no adjustment</code></td>
+          </tr>
+          <tr>
+            <td><strong>A</strong></td>
+            <td>Sweetener 5 <code>@UAT10072601 / Line01</code></td>
+            <td><strong>มี · 67,999.23337</strong></td>
+            <td><strong style="color:var(--ok)">success · Refreshed 200184</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <div class="scroll">
+        <svg viewBox="0 0 1060 360" role="img" style="min-width:880px"
+             aria-label="ไทม์ไลน์สี่ขั้นของการ refresh Inventory Adjustment ขั้นลบบรรทัดแก้แค่ใน memory ขั้น commit ลอตต้องการของทันที แต่ของเพิ่งถูกปล่อยคืนที่ขั้น save ซึ่งเกิดทีหลัง จึงหยิบซ้ำจากพาเลทที่เหลือศูนย์ไม่ได้">
+          <defs>
+            <marker id="stp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink-3)"/>
+            </marker>
+          </defs>
+
+          <rect x="24"  y="52" width="216" height="86" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="38" y="76"  font-size="12" font-weight="700" fill="var(--ink-2)">1 · record.load(IA)</text>
+          <text x="38" y="97"  font-size="10.5" fill="var(--ink-2)">โหลด IA 200184 ขึ้นมา</text>
+          <text x="38" y="116" font-size="10.5" fill="var(--ink-3)">isDynamic: true</text>
+
+          <rect x="272" y="52" width="216" height="86" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="286" y="76"  font-size="12" font-weight="700" fill="var(--ink-2)">2 · removeLine() ทุกบรรทัด</text>
+          <text x="286" y="97"  font-size="10.5" fill="var(--ink-2)">แก้ใน memory เท่านั้น</text>
+          <text x="286" y="116" font-size="10.5" fill="var(--warn)">ยังไม่ปล่อยของคืน</text>
+
+          <rect x="520" y="52" width="216" height="86" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.8"/>
+          <text x="534" y="76"  font-size="12" font-weight="700" fill="var(--warn)">3 · commitLine() ทุกลอต</text>
+          <text x="534" y="97"  font-size="10.5" fill="var(--ink-2)">ต้องมีของให้หยิบ ณ จุดนี้</text>
+          <text x="534" y="116" font-size="10.5" fill="var(--warn)">พาเลทเหลือ 0 → throw</text>
+
+          <rect x="768" y="52" width="216" height="86" rx="4" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="1.5"/>
+          <text x="782" y="76"  font-size="12" font-weight="700" fill="var(--ok)">4 · save()</text>
+          <text x="782" y="97"  font-size="10.5" fill="var(--ink-2)">ของเดิมถูกปล่อยคืนตรงนี้</text>
+          <text x="782" y="116" font-size="10.5" fill="var(--ink-3)">สายไปแล้วหนึ่งจังหวะ</text>
+
+          <g fill="none" stroke="var(--ink-3)" stroke-width="1.4">
+            <path d="M240,95 H266" marker-end="url(#stp)"/>
+            <path d="M488,95 H514" marker-end="url(#stp)"/>
+            <path d="M736,95 H762" marker-end="url(#stp)"/>
+          </g>
+
+          <text x="24" y="196" font-size="11.5" font-weight="700" letter-spacing="1.1" fill="var(--ink-3)">ของ 5+5 ในพาเลท PL-13082026-193 / -195</text>
+
+          <rect x="24" y="210" width="744" height="46" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.5"/>
+          <text x="38" y="239" font-size="12" font-weight="650" fill="var(--warn)">ยังถูก IA ใบเดิมถือไว้ · พาเลทมองเห็นเป็น on-hand 0</text>
+
+          <rect x="768" y="210" width="216" height="46" rx="4" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="1.5"/>
+          <text x="782" y="239" font-size="12" font-weight="650" fill="var(--ok)">ปล่อยคืนแล้ว · กลับเป็น 5</text>
+
+          <g fill="none" stroke="var(--warn)" stroke-width="1.6">
+            <path d="M628,140 V206" marker-end="url(#stp)"/>
+          </g>
+          <text x="644" y="178" font-size="10.5" fill="var(--warn)">ขั้นที่ 3 ไปขอของจากช่วงที่ยังไม่ถูกปล่อย</text>
+
+          <text x="24" y="296" font-size="11.5" fill="var(--ink-2)">on-hand จริงก่อน / หลังรอบ A — การ save คืนของได้จริง แต่คืนหลังจากที่ต้องใช้ไปแล้ว</text>
+          <text x="24" y="322" font-size="11" fill="var(--ink-3)">ก่อน</text>
+          <text x="86" y="322" font-size="11" fill="var(--ink-2)">PL-13082026-193 = 0 · PL-13082026-195 = 0 · UAT10072601 = 67,999.23337</text>
+          <text x="24" y="344" font-size="11" fill="var(--ink-3)">หลัง</text>
+          <text x="86" y="344" font-size="11" fill="var(--ok)">PL-13082026-193 = 5 · PL-13082026-195 = 5 · UAT10072601 = 67,994.23337</text>
+        </svg>
+      </div>
+      <figcaption>
+        <code>removeLine()</code> เป็นการแก้ใน memory ล้วน ๆ — ของที่ IA ถือไว้จะถูกปล่อยคืนตอน
+        <code>save()</code> เท่านั้น แต่ <code>commitLine()</code> ของทุกลอตเกิดก่อนหน้านั้นทั้งหมด
+        (<code>mfg_action_completion.js:1082–1210</code>) การ refresh จึงสำเร็จได้เฉพาะเมื่อลอตปลายทาง
+        มีของว่างพอ <strong>นอกเหนือจาก</strong> ที่ IA ตัวเองถืออยู่
+      </figcaption>
+    </figure>
+
+    <h3 style="font-size:15px;margin:0;font-weight:650">ทำไมเห็นข้อความไม่เหมือนกันแต่ละครั้ง</h3>
+    <p style="color:var(--ink-2);font-size:14px;max-width:72ch;margin:0">
+      <code>isCreateWOIssue</code> ตั้งต้นเป็น <code>false</code> และติดเป็น <code>true</code>
+      เมื่อมีลอต commit ผ่านอย่างน้อยหนึ่งลอต — อาการที่เห็นจึงขึ้นกับว่าผ่านไปกี่ลอต
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>ลอตที่ commit ผ่าน</th><th>เกิดอะไรกับ record</th><th>ข้อความที่ผู้ใช้เห็น</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>ผ่านบางลอตใน item เดียวกัน</td>
+            <td>Σ inventoryassignment ≠ adjustqtyby</td>
+            <td><code>reconfigure the inventory detail record after changing the quantity</code></td>
+          </tr>
+          <tr>
+            <td>ไม่ผ่านเลยสักลอต ทุก item</td>
+            <td>ไม่เคยเรียก <code>adjRec.save()</code></td>
+            <td><code>returned no adjustment</code></td>
+          </tr>
+          <tr>
+            <td>ผ่านครบของบาง item · item อื่นไม่ผ่านเลย</td>
+            <td><code>cancelLine()</code> ทิ้งทั้งบรรทัดของ item นั้น</td>
+            <td><strong style="color:var(--warn)">success — แต่วัตถุดิบตัวนั้นหายเงียบ</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">
+      <strong>แถวสุดท้ายอันตรายที่สุด</strong> — ระบบตอบว่าสำเร็จ ผู้ใช้เห็นแถบเขียว
+      แต่วัตถุดิบบางตัวไม่ถูกตัดออกจากสต็อกเลย และไม่มีอะไรบอก
+    </div>
+  </section>
+
+  <section>
+    <h2>ลูกโซ่ของสาเหตุ</h2>
+    <p style="color:var(--ink-2);font-size:14px;max-width:72ch">
+      ข้อความที่ผู้ใช้เห็นอยู่ปลายสุดของโซ่ ห่างจากต้นตอสามชั้น
+      ไล่ด้วยเคสจริงของ <code>22090900001</code> PE ขุ่น 250 มม. — รอบแรกเบิก
+      <strong>8.19200</strong> จากลอต <code>30072601</code> ซึ่งเป็นของทั้งหมดที่ลอตนั้นมี
+    </p>
+    <figure>
+      <div class="scroll">
+        <svg viewBox="0 0 1060 660" role="img" style="min-width:900px"
+             aria-label="ลูกโซ่สาเหตุห้าขั้น เริ่มจากรอบแรกเบิกลอตจนหมด ทำให้ยอดคงเหลือเป็นศูนย์ รอบสองลบบรรทัดแค่ในหน่วยความจำจึงยังไม่ปล่อยของ พอ commit ลอตเดิมจึงล้มและถูกยกเลิกเงียบ ปลายทางแยกเป็นสองข้อความคือยอดไม่ตรงกับไม่มี adjustment">
+          <defs>
+            <marker id="ch" viewBox="0 0 10 10" refX="5" refY="9" markerWidth="6.5" markerHeight="6.5" orient="auto">
+              <path d="M 0 0 L 10 0 L 5 10 z" fill="var(--ink-3)"/>
+            </marker>
+            <marker id="chw" viewBox="0 0 10 10" refX="5" refY="9" markerWidth="6.5" markerHeight="6.5" orient="auto">
+              <path d="M 0 0 L 10 0 L 5 10 z" fill="var(--warn)"/>
+            </marker>
+          </defs>
+
+          <text x="24"  y="28" font-size="11.5" font-weight="700" letter-spacing="1.2" fill="var(--ink-3)">สิ่งที่ code ทำ</text>
+          <text x="672" y="28" font-size="11.5" font-weight="700" letter-spacing="1.2" fill="var(--ink-3)">สถานะของลอต 30072601</text>
+
+          <!-- 1 -->
+          <rect x="24" y="46" width="600" height="70" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="38" y="70"  font-size="12.5" font-weight="650" fill="var(--ink)">1 · รอบแรก เบิก 8.19200 จากลอตที่มีอยู่ 8.19200</text>
+          <text x="38" y="91"  font-size="11" fill="var(--ink-2)">adjRec.save() สำเร็จ · IA post ลงสต็อกทันที</text>
+          <text x="38" y="108" font-size="10.5" fill="var(--ink-3)">เบิกยกใบ — ไม่เหลือเศษไว้เลย</text>
+
+          <rect x="672" y="46" width="364" height="70" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="686" y="76"  font-size="12" fill="var(--ink-2)">on-hand</text>
+          <text x="760" y="76"  font-size="14" font-weight="700" fill="var(--warn)">0</text>
+          <text x="686" y="98"  font-size="10.5" fill="var(--ink-3)">ของทั้ง 8.19200 ถูก IA ใบนี้ถือไว้</text>
+
+          <!-- 2 -->
+          <rect x="24" y="152" width="600" height="70" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="2"/>
+          <text x="38" y="176" font-size="12.5" font-weight="650" fill="var(--warn)">2 · รอบสอง — load IA แล้ว removeLine ทุกบรรทัด</text>
+          <text x="38" y="197" font-size="11" fill="var(--ink-2)">แก้เฉพาะสำเนาในหน่วยความจำ · ธุรกรรมใน DB ไม่ขยับ</text>
+          <text x="38" y="214" font-size="10.5" fill="var(--warn)">ของจะถูกปล่อยคืนตอน save() เท่านั้น ซึ่งอยู่ท้ายสุด</text>
+          <rect x="512" y="160" width="100" height="22" rx="11" fill="var(--warn)" />
+          <text x="562" y="175" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--surface)">ต้นตอ</text>
+
+          <rect x="672" y="152" width="364" height="70" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.5"/>
+          <text x="686" y="182" font-size="12" fill="var(--ink-2)">DB ยังถือ 8.19200 · memory ว่างเปล่า</text>
+          <text x="686" y="204" font-size="10.5" fill="var(--ink-3)">สองฝั่งเห็นไม่ตรงกันตั้งแต่จุดนี้</text>
+
+          <!-- 3 -->
+          <rect x="24" y="258" width="600" height="70" rx="4" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="38" y="282" font-size="12.5" font-weight="650" fill="var(--ink)">3 · commitLine ลอต 30072601 ขอ 8.19200</text>
+          <text x="38" y="303" font-size="11" fill="var(--ink-2)">NetSuite ตรวจกับ DB ไม่ใช่กับสำเนาใน memory</text>
+          <text x="38" y="320" font-size="10.5" fill="var(--warn)">เห็นว่ามี 0 → throw</text>
+
+          <rect x="672" y="258" width="364" height="70" rx="4" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="686" y="288" font-size="12" fill="var(--ink-2)">ยังเป็น 0 — ยังไม่มีอะไรถูกปล่อย</text>
+          <text x="686" y="310" font-size="10.5" fill="var(--ink-3)">ลอต UAT10072601 ที่เหลือ 67,999 ผ่านฉลุย</text>
+
+          <!-- 4 -->
+          <rect x="24" y="364" width="600" height="70" rx="4" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.5"/>
+          <text x="38" y="388" font-size="12.5" font-weight="650" fill="var(--ink)">4 · catch → cancelLine ทิ้งลอตนี้</text>
+          <text x="38" y="409" font-size="11" fill="var(--ink-2)">ข้อความลง execution log อย่างเดียว ไม่ส่งกลับไปหา caller</text>
+          <text x="38" y="426" font-size="10.5" fill="var(--ink-3)">_lotsOk = 1 จาก 2 ลอต · S&amp;S 81-120 ผ่านไปแล้ว</text>
+          <rect x="470" y="372" width="142" height="22" rx="11" fill="var(--ink-3)" />
+          <text x="541" y="387" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--surface)">อาการกลาง</text>
+
+          <rect x="672" y="364" width="364" height="70" rx="4" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="686" y="394" font-size="12" fill="var(--ink-2)">ลอตหายจาก inventory detail</text>
+          <text x="686" y="416" font-size="10.5" fill="var(--ink-3)">ไม่มีอะไรบนจอบอกว่าหายไป</text>
+
+          <g fill="none" stroke="var(--ink-3)" stroke-width="1.5">
+            <path d="M324,116 V146" marker-end="url(#ch)"/>
+            <path d="M854,116 V146" marker-end="url(#ch)"/>
+            <path d="M854,222 V252" marker-end="url(#ch)"/>
+            <path d="M854,328 V358" marker-end="url(#ch)"/>
+          </g>
+          <g fill="none" stroke="var(--warn)" stroke-width="1.8">
+            <path d="M324,222 V252" marker-end="url(#chw)"/>
+            <path d="M324,328 V358" marker-end="url(#chw)"/>
+            <path d="M324,434 V456" />
+            <path d="M164,456 H860" />
+            <path d="M164,456 V486" marker-end="url(#chw)"/>
+            <path d="M860,456 V486" marker-end="url(#chw)"/>
+          </g>
+
+          <!-- branch -->
+          <rect x="24" y="492" width="500" height="126" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.8"/>
+          <text x="38" y="516" font-size="12" font-weight="700" fill="var(--warn)">มีลอตรอดมาบ้าง · _lotsOk &gt; 0</text>
+          <text x="38" y="538" font-size="11" fill="var(--ink-2)">commit บรรทัดต่อทั้งที่ยอดไม่ครบ</text>
+          <text x="38" y="558" font-size="11" fill="var(--ink-2)">Σ detail 89.97282  ≠  adjustqtyby 98.16482</text>
+          <text x="38" y="578" font-size="11" fill="var(--ink-2)">save() ถูกเรียก แล้ว NetSuite ปฏิเสธ</text>
+          <text x="38" y="602" font-size="11" font-weight="650" fill="var(--warn)">reconfigure the inventory detail record</text>
+
+          <rect x="560" y="492" width="476" height="126" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.8"/>
+          <text x="574" y="516" font-size="12" font-weight="700" fill="var(--warn)">ไม่รอดเลยสักลอต ทุก item · _lotsOk = 0</text>
+          <text x="574" y="538" font-size="11" fill="var(--ink-2)">cancelLine ทิ้งทั้งบรรทัด ทุก item</text>
+          <text x="574" y="558" font-size="11" fill="var(--ink-2)">isCreateWOIssue ค้างเป็น false</text>
+          <text x="574" y="578" font-size="11" fill="var(--ink-2)">adjRec.save() ไม่เคยถูกเรียก</text>
+          <text x="574" y="602" font-size="11" font-weight="650" fill="var(--warn)">returned no adjustment</text>
+        </svg>
+      </div>
+      <figcaption>
+        สองข้อความปลายทางมาจากต้นตอเดียวกัน ต่างกันแค่ว่ามีลอตรอดมาบ้างไหม —
+        ข้อ 2 คือจุดที่ต้องแก้ ส่วนข้อ 4 คือจุดที่ทำให้ไล่หาสาเหตุยาก เพราะกลืนข้อความทิ้ง
+      </figcaption>
+    </figure>
+
+    <div class="scroll">
+      <table>
+        <thead><tr><th style="width:130px">ชั้น</th><th>คืออะไร</th><th>แก้ที่ไหน</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>ต้นตอ</strong></td>
+            <td><code>removeLine</code> ไม่ปล่อยของ — ของถูกปล่อยที่ <code>save()</code> ซึ่งอยู่หลัง <code>commitLine</code> ที่ต้องใช้ของ</td>
+            <td><code>mfg_action_completion.js:1082</code> — แยก save เป็นสองเฟส</td>
+          </tr>
+          <tr>
+            <td>อาการกลาง</td>
+            <td>ลอตถูก <code>cancelLine</code> ทิ้งโดยไม่มีใครรู้</td>
+            <td><code>:1190</code> — เก็บ error ส่งกลับ ไม่ใช่ log แล้วทิ้ง</td>
+          </tr>
+          <tr>
+            <td>อาการที่เห็น</td>
+            <td>ยอดใน inventory detail ไม่ตรงกับ <code>adjustqtyby</code></td>
+            <td><code>:1192</code> — เปลี่ยนเป็น all-or-nothing ต่อบรรทัด</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note note-ok">
+      <p><strong>เงื่อนไขที่แท้จริงไม่ใช่ &ldquo;ลอตเหลือ 0&rdquo;</strong></p>
+      <p>
+        แต่เป็น <strong>ลอตนั้นมีของว่างพอไหม โดยไม่นับของที่ IA ใบนี้ถืออยู่</strong> —
+        ลอต <code>UAT10072601</code> ที่เหลือ 67,999.23337 ผ่านจังหวะเดียวกันนี้ได้สบาย
+        ทั้งที่ยังไม่ปล่อยของเก่าเหมือนกัน ผลลัพธ์เลยถูกต้องโดยบังเอิญ
+      </p>
+      <p>
+        &ldquo;เบิกยกใบ&rdquo; เป็นแค่กรณีที่เจอบ่อยที่สุด เพราะ FIFO กวาดลอตเก่าให้หมดก่อนเสมอ
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>เงื่อนไข 5 ข้อ ต้องครบพร้อมกันถึงจะเกิด</h2>
+    <div class="scroll">
+      <table>
+        <thead><tr><th style="width:44px">#</th><th>เงื่อนไข</th><th>ถ้าไม่เข้าเงื่อนไข</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>มี WOC แล้ว</td><td><code>Skip — no WOC/log yet</code> ไม่ล้ม</td></tr>
+          <tr><td>2</td><td>เคย Save Feed สำเร็จมาแล้วอย่างน้อย 1 รอบ</td><td>รอบแรกสร้าง IA ใหม่ ไม่เข้าเส้น refresh</td></tr>
+          <tr><td>3</td><td>กลับมาแก้ feed แล้ว Save ซ้ำ</td><td>ไม่แก้ก็ไม่เกิด</td></tr>
+          <tr><td>4</td><td><strong>ลอตที่เลือกไม่มีของว่าง นอกเหนือจากที่ IA ใบเดิมถือไว้</strong></td><td><strong>ลอตมีของว่างพอ → หยิบซ้ำได้ → ผ่าน</strong></td></tr>
+          <tr><td>5</td><td>item เป็นแบบ track lot</td><td>ไม่มี inventory detail → ไม่ล้ม</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>ทางแก้ที่เสนอ</h2>
+    <div class="note">
+      <p><strong>ทางที่คิดไว้ตอนแรกใช้ไม่ได้</strong></p>
+      <p>
+        เคลียร์บรรทัดแล้ว <code>save()</code> หนึ่งครั้งเพื่อปล่อยของคืน ทำไม่ได้จริง เพราะ
+        NetSuite ไม่ยอมบันทึก Inventory Adjustment ที่ไม่เหลือบรรทัดเลย
+      </p>
+      <p>
+        ทางที่ใช้ได้คือ <strong>ไม่ต้องปล่อยของคืนตั้งแต่แรก</strong> ก็ในเมื่อลอตนั้นอยู่ในมือใบนี้อยู่แล้ว
+        ไม่มีเหตุผลต้องรื้อทิ้งแล้วไปหยิบกลับมาใหม่
+      </p>
+    </div>
+
+    <figure>
+      <div class="scroll">
+        <svg viewBox="0 0 1060 500" role="img" style="min-width:900px"
+             aria-label="เทียบสองวิธี ด้านซ้ายรื้อบรรทัดทิ้งทั้งใบแล้วหยิบทุกลอตใหม่จึงล้มที่ลอตซึ่งของหมด ด้านขวาอ่านของที่ใบนี้ถืออยู่ก่อนแล้วแตะเฉพาะส่วนที่ต่างจึงผ่าน">
+          <defs>
+            <marker id="df" viewBox="0 0 10 10" refX="5" refY="9" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 0 L 10 0 L 5 10 z" fill="var(--ink-3)"/>
+            </marker>
+          </defs>
+
+          <text x="24"  y="28" font-size="12.5" font-weight="700" letter-spacing="1.1" fill="var(--warn)">ตอนนี้ · รื้อทั้งใบทุกครั้ง</text>
+          <text x="544" y="28" font-size="12.5" font-weight="700" letter-spacing="1.1" fill="var(--ok)">หลังแก้ · แตะเฉพาะส่วนที่ต่าง</text>
+          <text x="24"  y="48" font-size="10.5" fill="var(--ink-3)">IA ถือ 30072601 8.19200 · feed ใหม่ = 30072601 8.19200 + S&amp;S 8.19200</text>
+          <text x="544" y="48" font-size="10.5" fill="var(--ink-3)">ฐานเดียวกัน</text>
+
+          <rect x="24" y="62" width="496" height="62" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.4"/>
+          <text x="38" y="86"  font-size="12" font-weight="650" fill="var(--ink)">1 · load IA</text>
+          <text x="38" y="108" font-size="10.5" fill="var(--ink-2)">ไม่ได้อ่านว่าตัวเองถืออะไรอยู่</text>
+
+          <rect x="24" y="140" width="496" height="62" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="2"/>
+          <text x="38" y="164" font-size="12" font-weight="700" fill="var(--warn)">2 · removeLine ทุกบรรทัด</text>
+          <text x="38" y="186" font-size="10.5" fill="var(--ink-2)">ของยังไม่ถูกปล่อย จะปล่อยตอน save ซึ่งอยู่ท้ายสุด</text>
+
+          <rect x="24" y="218" width="496" height="80" rx="4" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.4"/>
+          <text x="38" y="242" font-size="12" font-weight="650" fill="var(--ink)">3 · หยิบใหม่ทุกลอต</text>
+          <text x="38" y="264" font-size="10.5" fill="var(--warn)">30072601 ขอ 8.19200 · ว่าง 0 → throw → cancelLine</text>
+          <text x="38" y="284" font-size="10.5" fill="var(--ink-2)">S&amp;S 81-120 ขอ 8.19200 · ว่าง 89.97282 → ผ่าน</text>
+
+          <rect x="24" y="314" width="496" height="76" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.8"/>
+          <text x="38" y="338" font-size="12" font-weight="650" fill="var(--warn)">4 · save()</text>
+          <text x="38" y="358" font-size="10.5" fill="var(--ink-2)">Σ detail 8.19200 ≠ adjustqtyby 16.38400</text>
+          <text x="38" y="378" font-size="10.5" font-weight="650" fill="var(--warn)">reconfigure the inventory detail record</text>
+
+          <rect x="544" y="62" width="492" height="62" rx="4" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="2"/>
+          <text x="558" y="86"  font-size="12" font-weight="700" fill="var(--ok)">1 · load IA แล้วอ่านของที่ตัวเองถือ</text>
+          <text x="558" y="108" font-size="10.5" fill="var(--ink-2)">key = Serial/Lot Number | Bin | Status | Expiration Date</text>
+
+          <rect x="544" y="140" width="492" height="62" rx="4" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="2"/>
+          <text x="558" y="164" font-size="12" font-weight="700" fill="var(--ok)">2 · เทียบกับ feed ชุดใหม่</text>
+          <text x="558" y="186" font-size="10.5" fill="var(--ink-2)">ไม่มี removeLine เหมารวมอีกต่อไป</text>
+
+          <rect x="544" y="218" width="492" height="80" rx="4" fill="var(--surface)" stroke="var(--ok)" stroke-width="1.4"/>
+          <text x="558" y="242" font-size="12" font-weight="650" fill="var(--ink)">3 · แตะเฉพาะส่วนที่ต่าง</text>
+          <text x="558" y="264" font-size="10.5" fill="var(--ok)">30072601 ขอ 8.19200 = ถือ 8.19200 → ไม่แตะ</text>
+          <text x="558" y="284" font-size="10.5" fill="var(--ink-2)">S&amp;S 81-120 ลอตใหม่ → หยิบ 8.19200 จากว่าง 89.97282</text>
+
+          <rect x="544" y="314" width="492" height="76" rx="4" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="1.8"/>
+          <text x="558" y="338" font-size="12" font-weight="650" fill="var(--ok)">4 · save()</text>
+          <text x="558" y="358" font-size="10.5" fill="var(--ink-2)">Σ detail 16.38400 = adjustqtyby 16.38400</text>
+          <text x="558" y="378" font-size="10.5" font-weight="650" fill="var(--ok)">สำเร็จ · เลขที่ใบเดิมคงอยู่</text>
+
+          <g fill="none" stroke="var(--ink-3)" stroke-width="1.3">
+            <path d="M272,124 V134" marker-end="url(#df)"/>
+            <path d="M272,202 V212" marker-end="url(#df)"/>
+            <path d="M272,298 V308" marker-end="url(#df)"/>
+            <path d="M790,124 V134" marker-end="url(#df)"/>
+            <path d="M790,202 V212" marker-end="url(#df)"/>
+            <path d="M790,298 V308" marker-end="url(#df)"/>
+          </g>
+
+          <rect x="24" y="416" width="1012" height="62" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="38" y="440" font-size="11.5" font-weight="650" fill="var(--accent)">กฎที่เปลี่ยน</text>
+          <text x="38" y="462" font-size="11.5" fill="var(--ink-2)">ต้องมีของว่าง ≥ <tspan font-weight="700">max(0, ยอดใหม่ − ยอดที่ใบนี้ถืออยู่ในลอตเดียวกัน)</tspan> แทนที่จะเป็น ≥ ยอดใหม่ทั้งก้อน</text>
+        </svg>
+      </div>
+      <figcaption>
+        จุดที่ต้องแก้คือขั้นที่ 2 ไม่ใช่ <code>cancelLine</code> ที่ขั้น 4 ของหายไปตั้งแต่ตอนรื้อ
+        แก้เงื่อนไขปลายน้ำได้แค่เปลี่ยนหน้าตาของ error
+      </figcaption>
+    </figure>
+
+    <h3 style="font-size:15px;margin:0;font-weight:650">คีย์ที่ใช้จับคู่</h3>
+    <p style="color:var(--ink-2);font-size:14px;max-width:72ch">
+      เทียบกันที่ระดับ <code>inventoryassignment</code> ภายในบรรทัดของ item เดียวกัน
+      ใช้ทั้งสี่ field ที่แสดงบนหน้า Inventory Detail
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>field บนจอ</th><th>fieldId</th><th>บทบาทในคีย์</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Serial/Lot Number</td><td><code>issueinventorynumber</code></td>
+            <td>ระบุตัวลอต · ชื่อลอตซ้ำข้าม item ได้ แต่ภายใน item เดียวไม่ซ้ำ</td>
+          </tr>
+          <tr>
+            <td>Bin</td><td><code>binnumber</code></td>
+            <td>ลอตเดียวกันอยู่ได้หลาย bin · แยกกันคนละ assignment</td>
+          </tr>
+          <tr>
+            <td>Status</td><td><code>inventorystatus</code></td>
+            <td>Good / Hold / QC ของลอตเดียวกันคนละก้อน</td>
+          </tr>
+          <tr>
+            <td>Expiration Date</td><td><code>expirationdate</code></td>
+            <td><strong>ตัวตรวจทาน</strong> · ค่านี้ผูกกับ inventory number อยู่แล้ว จึงไม่เพิ่มความจำเพาะ แต่ถ้าสามตัวบนตรงกันแล้ววันหมดอายุไม่ตรง แปลว่าจับคู่ผิดตัว ต้องถือว่าเปลี่ยนและเขียนใหม่</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">
+      <p><strong>ต้อง normalize ก่อนเทียบทุก field</strong></p>
+      <p>
+        Bin กับ Status อ่านได้ทั้งเป็น internal id และเป็นข้อความแล้วแต่จุดที่เขียนเข้ามา ·
+        Expiration Date ต้องแปลงเป็นรูปแบบเดียวก่อนเทียบ ไม่งั้นวันเดียวกันคนละ format
+        จะถูกตัดสินว่าไม่ตรง แล้วไปรื้อบรรทัดที่ไม่ควรรื้อ
+      </p>
+      <p>
+        เคสจริงที่เจอวันนี้ — แถว feed ของ item <code>22090900001</code> ถูกเขียน
+        <code>lot id 8186</code> ทั้งที่ลอตจริงของ item นี้คือ <code>8196</code>
+        ข้อมูลแบบนี้ทำให้คีย์เพี้ยนได้ทันที
+      </p>
+    </div>
+
+    <h3 style="font-size:15px;margin:0;font-weight:650">ตัดสินใจอย่างไรต่อหนึ่งลอต</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>เทียบ ขอ กับ ที่ถืออยู่</th><th>ทำอะไร</th><th class="num">ต้องมีของว่าง</th></tr></thead>
+        <tbody>
+          <tr><td>ขอ = ถืออยู่</td><td>ไม่แตะเลย</td><td class="num">0</td></tr>
+          <tr><td>ขอ &lt; ถืออยู่</td><td>ลด quantity ของ assignment เดิม</td><td class="num">0</td></tr>
+          <tr><td>ขอ &gt; ถืออยู่</td><td>เพิ่มเฉพาะส่วนต่าง</td><td class="num">ส่วนต่าง</td></tr>
+          <tr><td>ไม่เคยถือลอตนี้</td><td>หยิบใหม่ตามปกติ</td><td class="num">เท่าที่ขอ</td></tr>
+          <tr><td>ถืออยู่แต่ feed ใหม่ไม่มีแล้ว</td><td>ลบ assignment ทิ้ง</td><td class="num">0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--ink-2);font-size:14px;max-width:72ch">
+      <code>cancelLine</code> จะเหลือไว้ดักเฉพาะกรณีของไม่พอจริง ซึ่งเป็น error ที่ถูกต้องและควรฟ้อง
+      พร้อมบอกชื่อลอตกับส่วนที่ขาด
+    </p>
+
+    <h3 style="font-size:15px;margin:0;font-weight:650">นิยามตัวเลขที่ใช้ทุกตาราง</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>คอลัมน์</th><th>ความหมาย</th></tr></thead>
+        <tbody>
+          <tr><td><strong>on-hand</strong></td><td>ของที่อยู่ในลอต+bin นั้นจริง ณ ตอนนี้ หลัง IA ใบนี้ตัดไปแล้ว</td></tr>
+          <tr><td><strong>ใบนี้ถือ</strong></td><td>จำนวนที่ IA ใบนี้ตัดออกไปจากลอตนั้น จะคืนกลับก็ต่อเมื่อ save สำเร็จ</td></tr>
+          <tr><td><strong>เพดาน</strong></td><td>on-hand + ใบนี้ถือ = ของทั้งหมดที่เบิกจากลอตนี้ได้ เกินนี้คือของไม่พอจริง</td></tr>
+          <tr><td><strong>ต้องหยิบเพิ่ม</strong></td><td><code>max(0, feed ใหม่ − ใบนี้ถือ)</code> = จำนวนที่ต้องไปเอาจาก on-hand</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--ink-3);font-size:13px;margin:0">
+      ตัวเลขในตารางถัดไปสมมติว่าไม่มี PWOC อื่นจองลอตเดียวกันไว้ ถ้ามี ยอดที่ใช้ได้จะต่ำกว่า on-hand
+      และต้องเทียบกับ available แทน
+    </p>
+
+    <h3 style="font-size:15px;margin:0;font-weight:650">ตัวอย่างตัวเลขกลม ๆ</h3>
+    <p style="color:var(--ink-2);font-size:14px;max-width:70ch">
+      สมมติลอตหนึ่งมีของทั้งหมด <strong>100</strong> · IA ใบนี้เบิกไปแล้ว <strong>20</strong> ·
+      ในคลังจึงเหลือ <strong>80</strong> · แล้วผู้ใช้กลับมาแก้ feed
+    </p>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>แก้ feed เป็น</th><th class="num">ต้องหยิบเพิ่ม</th>
+            <th class="num">ตอนนี้ต้องมี ≥</th><th>ตอนนี้</th>
+            <th class="num">หลังแก้ต้องมี ≥</th><th>หลังแก้</th>
+            <th class="num">เหลือในคลัง</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>20 · เท่าเดิม</td><td class="num">0</td><td class="num">20</td><td>ผ่าน</td><td class="num">0</td><td>ผ่าน</td><td class="num">80</td></tr>
+          <tr><td>5 · ลด</td><td class="num">0</td><td class="num">5</td><td>ผ่าน</td><td class="num">0</td><td>ผ่าน</td><td class="num">95</td></tr>
+          <tr><td>50 · เพิ่ม</td><td class="num">30</td><td class="num">50</td><td>ผ่าน</td><td class="num">30</td><td>ผ่าน</td><td class="num">50</td></tr>
+          <tr><td>90 · เพิ่ม</td><td class="num">70</td><td class="num">90 &gt; 80</td><td><strong style="color:var(--warn)">ล้มผิด</strong></td><td class="num">70 ≤ 80</td><td><strong style="color:var(--ok)">ผ่าน</strong></td><td class="num">10</td></tr>
+          <tr><td>100 · เบิกยกลอต</td><td class="num">80</td><td class="num">100 &gt; 80</td><td><strong style="color:var(--warn)">ล้มผิด</strong></td><td class="num">80 = 80</td><td><strong style="color:var(--ok)">ผ่านพอดี</strong></td><td class="num">0</td></tr>
+          <tr><td>120 · เกินที่ลอตมี</td><td class="num">100</td><td class="num">120</td><td>ล้ม</td><td class="num">100 &gt; 80</td><td><strong>ล้มถูก</strong></td><td class="num">80<br><span style="color:var(--ink-3)">ไม่เปลี่ยน</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--ink-2);font-size:14px;max-width:70ch">
+      สองแถวกลางคือหัวใจ — อยากเบิก 90 จากลอตที่มี 100 ซึ่งพอสบาย แต่ตอนนี้ล้ม
+      เพราะระบบไปนับแข่งกับ 20 ที่ตัวเองถืออยู่
+    </p>
+
+    <p style="color:var(--ink-2);font-size:14px;max-width:70ch">
+      ทีนี้ลอตที่ <strong>เบิกไปหมดแล้ว</strong> — ลอตมีของทั้งหมด <strong>20</strong> ·
+      IA ใบนี้เบิกไปครบ <strong>20</strong> · ในคลังเหลือ <strong>0</strong>
+    </p>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>แก้ feed เป็น</th><th class="num">ต้องหยิบเพิ่ม</th>
+            <th class="num">ตอนนี้ต้องมี ≥</th><th>ตอนนี้</th><th>หลังแก้</th>
+            <th class="num">เหลือในคลัง</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>20 · เท่าเดิม</td><td class="num">0</td><td class="num">20 &gt; 0</td><td><strong style="color:var(--warn)">ล้ม</strong></td><td><strong style="color:var(--ok)">ผ่าน</strong></td><td class="num">0</td></tr>
+          <tr><td>5 · ลด</td><td class="num">0</td><td class="num">5 &gt; 0</td><td><strong style="color:var(--warn)">ล้ม</strong></td><td><strong style="color:var(--ok)">ผ่าน</strong></td><td class="num">15</td></tr>
+          <tr><td>20 + ลอตอื่นอีก 20</td><td class="num">0 · ลอตใหม่ 20</td><td class="num">20 &gt; 0</td><td><strong style="color:var(--warn)">ล้ม</strong></td><td><strong style="color:var(--ok)">ผ่าน</strong></td><td class="num">0</td></tr>
+          <tr><td>25 · เกินที่ลอตมี</td><td class="num">5</td><td class="num">25 &gt; 0</td><td>ล้ม</td><td><strong>ล้มถูก</strong> ขาด 5</td><td class="num">0<br><span style="color:var(--ink-3)">ไม่เปลี่ยน</span></td></tr>
+          <tr><td>เอาลอตนี้ออก</td><td class="num">0</td><td class="num">—</td><td>ผ่าน</td><td>ผ่าน</td><td class="num">20<br><span style="color:var(--ink-3)">คืนเต็ม</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--ink-2);font-size:14px;max-width:70ch">
+      แถวที่สองอ่านแล้วเห็นทันทีว่าผิดตรงไหน — สั่ง <strong>ลด</strong> จาก 20 เหลือ 5
+      ซึ่งเป็นการ<strong>คืนของ</strong>ให้คลัง 15 หน่วย แต่ระบบกลับเรียกร้องว่าต้องมีของในคลัง 5 ก่อน
+      ทั้งที่คลังมี 0 จึงทำไม่ได้
+    </p>
+
+    <div class="note note-ok">
+      <p><strong>กฎเดียวที่เปลี่ยน</strong></p>
+      <p style="font-size:15px">
+        ตอนนี้ &nbsp;<code>ของในคลัง ≥ ยอดใหม่</code><br>
+        หลังแก้ &nbsp;<code>ของในคลัง ≥ ยอดใหม่ − ที่ใบนี้ถืออยู่</code>
+      </p>
+      <p>ลดหรือไม่เปลี่ยน ไม่ต้องใช้ของในคลังเลยสักหน่วย</p>
+    </div>
+
+    <p style="color:var(--ink-3);font-size:13px;margin:0">
+      ข้างล่างคือตัวเลขจริงจาก WO-FSC-00000706 item <code>22090900001</code> ในรูปแบบเดียวกัน
+    </p>
+
+    <h3 style="font-size:15px;margin:0;font-weight:650">ลอตที่ยังมีของเหลือ</h3>
+    <p style="color:var(--ink-3);font-size:13px;margin:0">
+      <code>23/07/26 S&amp;S 81-120 @PL-260723-0121</code> ·
+      ตั้งต้นเหมือนกันทุกแถว: on-hand <strong>81.78082</strong> ·
+      ใบนี้ถือ <strong>8.192</strong> · เพดาน <strong>89.97282</strong><br>
+      แต่ละแถวเป็นสถานการณ์อิสระจากจุดตั้งต้นเดียวกัน ไม่ใช่ลำดับเหตุการณ์ต่อกัน
+    </p>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>feed ใหม่</th><th class="num">ต้องหยิบเพิ่ม</th>
+            <th class="num">ตอนนี้ต้องมี on-hand ≥</th><th>ตอนนี้</th>
+            <th class="num">หลังแก้ต้องมี on-hand ≥</th><th>หลังแก้</th>
+            <th class="num">on-hand หลังบันทึก</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>8.192 · เท่าเดิม</td><td class="num">0</td><td class="num">8.192</td><td>ผ่าน</td><td class="num">0</td><td>ผ่าน</td><td class="num">81.78082</td></tr>
+          <tr><td>5 · ลด 3.192</td><td class="num">0</td><td class="num">5</td><td>ผ่าน</td><td class="num">0</td><td>ผ่าน</td><td class="num">84.97282</td></tr>
+          <tr><td>20 · เพิ่ม</td><td class="num">11.808</td><td class="num">20</td><td>ผ่าน</td><td class="num">11.808</td><td>ผ่าน</td><td class="num">69.97282</td></tr>
+          <tr><td>85 · เพิ่ม</td><td class="num">76.808</td><td class="num">85 &gt; 81.78082</td><td><strong style="color:var(--warn)">ล้มผิด</strong></td><td class="num">76.808 ≤ 81.78082</td><td><strong style="color:var(--ok)">ผ่าน</strong></td><td class="num">4.97282</td></tr>
+          <tr><td>89.97282 · เบิกยกลอต</td><td class="num">81.78082</td><td class="num">89.97282 &gt; 81.78082</td><td><strong style="color:var(--warn)">ล้มผิด</strong></td><td class="num">81.78082 = 81.78082</td><td><strong style="color:var(--ok)">ผ่านพอดี</strong></td><td class="num">0</td></tr>
+          <tr><td>95 · เกินเพดาน 89.97282</td><td class="num">86.808</td><td class="num">95</td><td>ล้ม</td><td class="num">86.808 &gt; 81.78082</td><td><strong>ล้มถูก</strong></td><td class="num">81.78082<br><span style="color:var(--ink-3)">ไม่เปลี่ยน</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--ink-2);font-size:14px;max-width:72ch">
+      คอลัมน์สุดท้ายคือยอดที่จะเหลือจริงเมื่อบันทึกสำเร็จ · เท่ากับ
+      <code>เพดาน − feed ใหม่</code> เสมอ เพราะของที่ใบนี้ถือไว้เดิมถูกคืนแล้วหยิบใหม่ตามยอดล่าสุด
+      แถวที่ล้มยอดไม่ขยับเลย เพราะ save เป็น atomic
+    </p>
+
+    <h3 style="font-size:15px;margin:0;font-weight:650">ลอตที่เบิกจนหมด</h3>
+    <p style="color:var(--ink-3);font-size:13px;margin:0">
+      <code>30072601 @Line01</code> ·
+      ตั้งต้นเหมือนกันทุกแถว: on-hand <strong>0</strong> ·
+      ใบนี้ถือ <strong>8.192</strong> · เพดาน <strong>8.192</strong>
+    </p>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>feed ใหม่</th><th class="num">ต้องหยิบเพิ่ม</th>
+            <th class="num">ตอนนี้ต้องมี on-hand ≥</th><th>ตอนนี้</th><th>หลังแก้</th>
+            <th class="num">on-hand หลังบันทึก</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>8.192 · เท่าเดิม</td><td class="num">0</td><td class="num">8.192 &gt; 0</td><td><code>no adjustment</code></td><td><strong style="color:var(--ok)">ผ่าน</strong> ไม่แตะ</td><td class="num">0</td></tr>
+          <tr><td>5 · ลด 3.192</td><td class="num">0</td><td class="num">5 &gt; 0</td><td><code>no adjustment</code></td><td><strong style="color:var(--ok)">ผ่าน</strong> ลด quantity</td><td class="num">3.192</td></tr>
+          <tr><td>8.192 + S&amp;S 8.192</td><td class="num">0 · ลอตใหม่ 8.192</td><td class="num">8.192 &gt; 0</td><td><code>reconfigure…</code></td><td><strong style="color:var(--ok)">ผ่าน</strong></td><td class="num">0<br><span style="color:var(--ink-3)">S&amp;S 73.58882</span></td></tr>
+          <tr><td>10 · เกินเพดาน 8.192</td><td class="num">1.808</td><td class="num">10 &gt; 0</td><td><code>no adjustment</code></td><td><strong>ล้มถูก</strong> ขาด 1.808</td><td class="num">0<br><span style="color:var(--ink-3)">ไม่เปลี่ยน</span></td></tr>
+          <tr><td>เอาลอตนี้ออก</td><td class="num">0</td><td class="num">—</td><td>ผ่าน</td><td>ผ่าน</td><td class="num">8.192<br><span style="color:var(--ink-3)">คืนเต็ม</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--ink-2);font-size:14px;max-width:72ch">
+      สองแถวแรกคือจุดที่ไร้เหตุผลที่สุด — <strong>ลอตที่ถูกเบิกจนหมด ตอนนี้ทำอะไรกับมันไม่ได้เลย
+      แม้แต่จะลดจำนวน</strong> ทั้งที่การลดไม่ต้องใช้ของสักหน่วย และหลังบันทึกยอดจะ<strong>เพิ่มขึ้น</strong>
+      เป็น 3.192 ด้วยซ้ำ
+    </p>
+
+    <h3 style="font-size:15px;margin:0;font-weight:650">หลายลอตในบรรทัดเดียว และหลาย item</h3>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th>สภาพ</th><th class="num">on-hand</th><th class="num">ใบนี้ถือ</th><th class="num">feed ใหม่</th><th class="num">ต้องหยิบเพิ่ม</th><th>ตอนนี้</th><th>หลังแก้</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>item เดียว · ลอต P (หมด)</td>
+            <td class="num">0</td><td class="num">8.192</td><td class="num">8.192</td><td class="num">0</td>
+            <td rowspan="2"><code>reconfigure…</code><br><span style="color:var(--ink-3)">Σ 8.192 ≠ 16.384</span></td>
+            <td rowspan="2"><strong style="color:var(--ok)">ผ่าน</strong><br><span style="color:var(--ink-3)">Σ 16.384 = 16.384</span></td>
+          </tr>
+          <tr>
+            <td>item เดียวกัน · ลอต Q (ใหม่)</td>
+            <td class="num">81.78082</td><td class="num">0</td><td class="num">8.192</td><td class="num">8.192</td>
+          </tr>
+          <tr>
+            <td>item A · ลอตยังมีของ</td>
+            <td class="num">81.78082</td><td class="num">0</td><td class="num">8.192</td><td class="num">8.192</td>
+            <td rowspan="2"><strong style="color:var(--warn)">success แต่ item B หายเงียบ</strong><br><span style="color:var(--ink-3)">B ถูก cancelLine ทั้งบรรทัด</span></td>
+            <td rowspan="2"><strong style="color:var(--ok)">ผ่านทั้งคู่</strong></td>
+          </tr>
+          <tr>
+            <td>item B · ลอตเดียวและหมด</td>
+            <td class="num">0</td><td class="num">8.192</td><td class="num">8.192</td><td class="num">0</td>
+          </tr>
+          <tr>
+            <td>ทุกลอตของทุก item หมด</td>
+            <td class="num">0</td><td class="num">ตามที่ถือ</td><td class="num">เท่าเดิม</td><td class="num">0</td>
+            <td><code>no adjustment</code><br><span style="color:var(--ink-3)">save ไม่เคยถูกเรียก</span></td>
+            <td><strong style="color:var(--ok)">ผ่าน</strong> ไม่แตะอะไรเลย</td>
+          </tr>
+          <tr>
+            <td>ย้าย bin ในลอตเดียวกัน<br><span style="color:var(--ink-3)">bin เดิม → bin ใหม่</span></td>
+            <td class="num">0<br>0</td><td class="num">8.192<br>0</td><td class="num">0<br>8.192</td><td class="num">0<br>8.192</td>
+            <td><code>no adjustment</code></td>
+            <td><strong style="color:var(--ok)">ผ่าน</strong> ด้วย 2 pass</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-size:15px;margin:0;font-weight:650">เคสที่ต้องบันทึกสองรอบ</h3>
+    <p style="color:var(--ink-2);font-size:14px;max-width:72ch">
+      ย้าย bin ภายในลอตเดียวกัน การลด bin เดิมไม่ปล่อยของให้ bin ใหม่ในการ save เดียวกัน
+      แก้ด้วยการแยกเป็นสองจังหวะที่ <strong>ใบไม่เคยว่าง</strong> จึงไม่ติดข้อจำกัดของ NetSuite
+    </p>
+    <pre><code>pass 1   ลบ / ลด อย่างเดียว   → save   (ใบยังเหลือบรรทัด)
+pass 2   load ใหม่ → เพิ่ม     → save</code></pre>
+    <p style="color:var(--ink-2);font-size:14px;max-width:72ch">
+      เคสส่วนใหญ่ไม่ต้อง pass 1 เลย และเมื่อ diff ว่างก็ข้ามทั้งสอง pass
+    </p>
+
+    <h3 style="font-size:15px;margin:0;font-weight:650">เคสทั้งหมดที่ต้องรองรับ</h3>
+    <p style="color:var(--ink-3);font-size:13px;margin:0">
+      คอลัมน์หลักฐาน · <strong>ยิงจริง</strong> = ทดสอบบน SB1 แล้วเมื่อ 2026-08-19 ·
+      <strong>คาดการณ์</strong> = อ่านจากโค้ด ยังไม่ได้ยิง
+    </p>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th style="width:96px">กลุ่ม</th><th>เคส</th><th class="num" style="width:120px">on-hand · ใบนี้ถือ</th><th>ตอนนี้</th><th>หลังแก้</th><th style="width:82px">หลักฐาน</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td rowspan="7">ลอตเดียว<br>ใน item เดียว</td>
+            <td>ไม่แก้อะไรเลย กด Save ซ้ำ</td><td class="num">0 · 8.192</td>
+            <td><code>no adjustment</code></td>
+            <td>ไม่เขียนอะไรเลย</td>
+            <td>ยิงจริง</td>
+          </tr>
+          <tr>
+            <td>ลดจำนวน ลอตยังมีของเหลือ</td><td class="num">81.78082 · 8.192</td>
+            <td>ผ่าน (บังเอิญของว่างพอ)</td>
+            <td>ผ่าน ไม่ต้องมีของว่าง</td>
+            <td>คาดการณ์</td>
+          </tr>
+          <tr>
+            <td>ลดจำนวน ลอตเบิกจนหมด</td><td class="num">0 · 8.192</td>
+            <td><code>no adjustment</code></td>
+            <td>ผ่าน</td>
+            <td>คาดการณ์</td>
+          </tr>
+          <tr>
+            <td>เพิ่มจำนวน ของว่างพอทั้งก้อน</td><td class="num">81.78082 · 8.192</td>
+            <td>ผ่าน</td>
+            <td>ผ่าน</td>
+            <td>ยิงจริง</td>
+          </tr>
+          <tr>
+            <td>เพิ่มจำนวน ของว่างพอเฉพาะส่วนต่าง</td><td class="num">81.78082 · 8.192</td>
+            <td><strong style="color:var(--warn)">ล้มผิด</strong></td>
+            <td><strong style="color:var(--ok)">ผ่าน</strong></td>
+            <td>คาดการณ์</td>
+          </tr>
+          <tr>
+            <td>เพิ่มจำนวนเกินที่ลอตมีจริง</td><td class="num">0 · 8.192</td>
+            <td>ล้ม ข้อความไม่บอกอะไร</td>
+            <td><strong>ล้มถูก</strong> บอกลอต + ส่วนที่ขาด</td>
+            <td>คาดการณ์</td>
+          </tr>
+          <tr>
+            <td>เอาลอตออกจาก feed</td><td class="num">0 · 8.192</td>
+            <td>ผ่าน</td>
+            <td>ผ่าน</td>
+            <td>ยิงจริง</td>
+          </tr>
+
+          <tr>
+            <td rowspan="5">หลายลอต<br>หลาย item</td>
+            <td>เพิ่มลอตใหม่ ลอตเดิมยังมีของเหลือ</td><td class="num">81.78082 · 8.192</td>
+            <td>ผ่าน</td>
+            <td>ผ่าน</td>
+            <td>ยิงจริง · 16.384</td>
+          </tr>
+          <tr>
+            <td>เพิ่มลอตใหม่ ลอตเดิมเบิกจนหมด</td><td class="num">0 · 8.192</td>
+            <td><code>reconfigure…</code></td>
+            <td><strong style="color:var(--ok)">ผ่าน</strong></td>
+            <td>ยิงจริง</td>
+          </tr>
+          <tr>
+            <td>ทุกลอตของทุก item เบิกจนหมด</td><td class="num">0 · ตามที่ถือ</td>
+            <td><code>no adjustment</code></td>
+            <td>ผ่าน ไม่แตะอะไรเลย</td>
+            <td>ยิงจริง</td>
+          </tr>
+          <tr>
+            <td>item A ผ่าน · item B ทุกลอตหมด</td><td class="num">B: 0 · 8.192</td>
+            <td><strong style="color:var(--warn)">success แต่ B หายเงียบ</strong></td>
+            <td>ผ่านทั้งคู่</td>
+            <td>คาดการณ์</td>
+          </tr>
+          <tr>
+            <td>ย้าย bin ภายในลอตเดียวกัน</td><td class="num">0 · 8.192</td>
+            <td><code>no adjustment</code></td>
+            <td>ผ่าน ด้วย 2 pass</td>
+            <td>คาดการณ์</td>
+          </tr>
+
+          <tr>
+            <td rowspan="4">ระดับ item<br>และทั้งใบ</td>
+            <td>เพิ่ม item ใหม่เข้า feed</td><td class="num">ลอตใหม่ · 0</td>
+            <td>ผ่าน ถ้าลอตเดิมของยังพอ</td>
+            <td>ผ่าน เพิ่มบรรทัดใหม่</td>
+            <td>คาดการณ์</td>
+          </tr>
+          <tr>
+            <td>ลบ item ออก item อื่นยังอยู่</td><td class="num">—</td>
+            <td>ผ่าน</td>
+            <td>ผ่าน ลบเฉพาะบรรทัดนั้น</td>
+            <td>คาดการณ์</td>
+          </tr>
+          <tr>
+            <td>ลบ feed ทั้ง task</td><td class="num">0 · ตามที่ถือ</td>
+            <td><strong style="color:var(--warn)">SL skip · IA ไม่ขยับ ของค้างในสต็อก</strong></td>
+            <td>ต้องเพิ่มเส้นลบใบ</td>
+            <td>ยิงจริง</td>
+          </tr>
+          <tr>
+            <td>เปลี่ยนหน่วยของบรรทัด</td><td class="num">—</td>
+            <td>เขียนใหม่ทั้งบรรทัด</td>
+            <td>ถือเป็นบรรทัดเปลี่ยน ต้องรื้อบรรทัดนั้น</td>
+            <td>คาดการณ์</td>
+          </tr>
+
+          <tr>
+            <td rowspan="4">ข้อมูล<br>ผิดปกติ</td>
+            <td>IA ถูกลบไปแล้ว สแตมป์ยังชี้อยู่</td><td class="num">คืนแล้ว · 0</td>
+            <td>ตรวจเจอ สร้างใบใหม่ <code>refreshed:false</code></td>
+            <td>เหมือนเดิม ควรเติม guard ให้ชัด</td>
+            <td>ยิงจริง</td>
+          </tr>
+          <tr>
+            <td>lot id ในแถว feed ผิดตัว</td><td class="num">—</td>
+            <td>assign ด้วยชื่อลอตจึงผ่าน ไม่มีใครรู้</td>
+            <td><strong style="color:var(--warn)">อันตราย</strong> diff จะจับคู่ไม่ตรง ต้องมีตัวกัน Σ</td>
+            <td>ยิงจริง · lot 8186 vs 8196</td>
+          </tr>
+          <tr>
+            <td>Bin · Status · Expiration Date เก็บคนละรูปแบบ</td><td class="num">—</td>
+            <td>ไม่กระทบ เพราะรื้อทิ้งหมด</td>
+            <td><strong style="color:var(--warn)">ต้อง normalize ก่อนเทียบ</strong></td>
+            <td>คาดการณ์</td>
+          </tr>
+          <tr>
+            <td>item ที่ไม่ track lot</td><td class="num">—</td>
+            <td>ลงเส้น <code>catch (invDetailErr)</code> commit โดยไม่มี lot</td>
+            <td>ต้องคงเส้นนี้ไว้ ไม่แตะ</td>
+            <td>คาดการณ์</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--ink-2);font-size:14px;max-width:72ch">
+      สรุป <strong>7 เคสที่ควรผ่านแต่ตอนนี้ล้ม</strong> จะผ่านหมดหลังแก้ ·
+      <strong>2 เคสที่ควรล้ม</strong> ยังล้มแต่ได้ข้อความที่บอกลอตและส่วนที่ขาด ·
+      <strong>3 เคสข้อมูลผิดปกติ</strong> เป็นความเสี่ยงใหม่ที่ diff สร้างขึ้น ต้องมีตัวกันตามกล่องข้างล่าง
+    </p>
+
+    <div class="note">
+      <p><strong>ความเสี่ยงใหม่ที่ของเดิมไม่มี</strong></p>
+      <p>
+        การรื้อทิ้งทั้งใบนั้นสิ้นเปลือง แต่ไม่มีทางจำผิด ผลลัพธ์ตรงกับ feed เสมอ
+        ส่วน diff ต้องจับคู่ <code>Serial/Lot Number | Bin | Status | Expiration Date</code> ให้แม่น (ภายในบรรทัดของ item เดียวกัน)
+        ถ้า key เพี้ยนแม้แต่จุดเดียว (Bin เก็บเป็น id ที่หนึ่งเป็นชื่อที่หนึ่ง · Status เป็น text หรือ id · Expiration Date คนละ format ·
+        lot id ผิดตัว) มันจะตัดสินว่า &ldquo;ไม่เปลี่ยน&rdquo; ทั้งที่เปลี่ยน แล้ว IA จะค้างค่าเก่าแบบเงียบ
+      </p>
+      <p>
+        <strong>ตัวกันบังคับ</strong> — หลังทำ diff เสร็จ ตรวจว่า
+        <code>Σ assignment ทุกบรรทัด === Σ qtytofeed</code> ถ้าไม่ตรงให้ throw ทันที ห้ามปล่อยผ่าน
+      </p>
+    </div>
+
+    <div class="note note-ok">
+      <p><strong>ขอบเขตการแก้</strong></p>
+      <p>
+        ทั้งหมดอยู่ใน <code>mfg_action_completion.js</code> ในสาขา <code>if (_refreshAdjId)</code>
+        ซึ่งมีแต่ฝั่ง PWOC ที่ส่งค่านี้เข้ามา CREATE WOC ไม่เคยเข้าสาขานี้จึงไม่กระทบ
+      </p>
+      <p>
+        แทนที่บล็อก <code>removeLine</code> เดิม 5 บรรทัด ด้วยประมาณ 50 บรรทัด
+        และเพิ่ม <code>skippedLots</code> ใน return value เพื่อให้ตอนของไม่พอจริง ผู้ใช้รู้ว่าลอตไหน ขาดเท่าไร
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>การทำงานแบบใหม่ทั้งหมด</h2>
+    <p style="color:var(--ink-2);font-size:14px;max-width:72ch">
+      ทุกอย่างที่ขึ้น SB1 แล้วเมื่อ 2026-08-19 · กล่องเขียวคือของที่เพิ่มใหม่ กล่องเทาคือของเดิมที่ไม่แตะ
+    </p>
+    <figure>
+      <div class="scroll">
+        <svg viewBox="0 0 1080 1120" role="img" style="min-width:940px"
+             aria-label="ผังการทำงานใหม่ทั้งหมดสี่ชั้น ตั้งแต่กด Save Feed บนหน้าจอ ผ่าน backend ที่เก็บชุดเดิมไว้คืน ไปยัง gen completion ที่ลบใบเมื่อ feed ว่าง แล้วเข้าสู่ diff ที่แตะเฉพาะส่วนต่าง ปิดท้ายด้วยการคืนค่าเมื่อล้ม">
+          <defs>
+            <marker id="nf" viewBox="0 0 10 10" refX="5" refY="9" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 0 L 10 0 L 5 10 z" fill="var(--ink-3)"/>
+            </marker>
+            <marker id="nfr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink-3)"/>
+            </marker>
+          </defs>
+
+          <rect x="24" y="18" width="150" height="22" rx="11" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="1.2"/>
+          <text x="99" y="33" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--ok)">เพิ่มใหม่วันนี้</text>
+          <rect x="186" y="18" width="120" height="22" rx="11" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.2"/>
+          <text x="246" y="33" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--ink-2)">ของเดิม</text>
+
+          <!-- ── ชั้น 1 ── -->
+          <rect x="24" y="54" width="1032" height="164" rx="5" fill="none" stroke="var(--line)" stroke-width="1.3" stroke-dasharray="4 4"/>
+          <text x="40" y="76" font-size="11.5" font-weight="700" letter-spacing="1.1" fill="var(--ink-3)">1 · หน้าจอ PWOC และ backend 886</text>
+
+          <rect x="44" y="88" width="312" height="112" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.4"/>
+          <text x="58" y="112" font-size="12" font-weight="650" fill="var(--ink)">กด Save Feed</text>
+          <text x="58" y="134" font-size="10.5" fill="var(--ink-2)">getMaterialsWithEnteredQty()</text>
+          <text x="58" y="152" font-size="10.5" fill="var(--ink-2)">แบ่งเป็นชั้งก์ราย WO</text>
+          <text x="58" y="176" font-size="10.5" fill="var(--ink-3)">materials.js</text>
+
+          <rect x="396" y="88" width="312" height="112" rx="4" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="1.8"/>
+          <text x="410" y="112" font-size="12" font-weight="700" fill="var(--ok)">saveFeedMaterials</text>
+          <text x="410" y="134" font-size="10.5" fill="var(--ink-2)">เก็บแถวเดิมเป็น replacedRows ก่อนลบ</text>
+          <text x="410" y="152" font-size="10.5" fill="var(--ink-2)">แล้วสร้างชุดใหม่</text>
+          <text x="410" y="176" font-size="10.5" fill="var(--ok)">#152 · key ใหม่ ผู้เรียกเดิมไม่กระทบ</text>
+
+          <rect x="748" y="88" width="308" height="112" rx="4" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="1.8"/>
+          <text x="762" y="112" font-size="12" font-weight="700" fill="var(--ok)">จำชุดเดิมไว้ราย WO</text>
+          <text x="762" y="134" font-size="10.5" fill="var(--ink-2)">prevByWo · scopeByWo</text>
+          <text x="762" y="152" font-size="10.5" fill="var(--ink-2)">ยิง CREATE RM ADJ เบื้องหลัง</text>
+          <text x="762" y="176" font-size="10.5" fill="var(--ok)">#152</text>
+
+          <!-- ── ชั้น 2 ── -->
+          <rect x="24" y="242" width="1032" height="182" rx="5" fill="none" stroke="var(--line)" stroke-width="1.3" stroke-dasharray="4 4"/>
+          <text x="40" y="264" font-size="11.5" font-weight="700" letter-spacing="1.1" fill="var(--ink-3)">2 · MFG2 SL Process PreWOC</text>
+
+          <rect x="44" y="276" width="312" height="130" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.4"/>
+          <text x="58" y="300" font-size="12" font-weight="650" fill="var(--ink)">feed ของ task นี้ว่างไหม</text>
+          <text x="58" y="322" font-size="10.5" fill="var(--ink-2)">buildFeedMatData()</text>
+          <text x="58" y="344" font-size="10.5" fill="var(--ink-3)">อ่านจากแถว feedmat ของ task</text>
+
+          <rect x="396" y="276" width="312" height="130" rx="4" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="1.8"/>
+          <text x="410" y="300" font-size="12" font-weight="700" fill="var(--ok)">ว่าง และมี IA ค้างอยู่</text>
+          <text x="410" y="322" font-size="10.5" fill="var(--ink-2)">ลบ IA · ล้างสแตมป์ · ล้าง log</text>
+          <text x="410" y="340" font-size="10.5" fill="var(--ink-2)">ของคืนเข้าคลังทันที</text>
+          <text x="410" y="362" font-size="10.5" fill="var(--ink-3)">ลบไม่ได้ = ตอบ success:false</text>
+          <text x="410" y="384" font-size="10.5" fill="var(--ok)">#151 · เดิม skip เฉย ๆ ของค้างถาวร</text>
+
+          <rect x="748" y="276" width="308" height="130" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.4"/>
+          <text x="762" y="300" font-size="12" font-weight="650" fill="var(--ink)">ไม่ว่าง</text>
+          <text x="762" y="322" font-size="10.5" fill="var(--ink-2)">เก็บ log เดิมไว้ แล้วเขียนชุดใหม่</text>
+          <text x="762" y="344" font-size="10.5" fill="var(--ink-2)">เรียก createWorkOrderIssueBeforeWOC</text>
+          <text x="762" y="366" font-size="10.5" fill="var(--ink-3)">#151 log rollback ทำไว้ก่อนหน้านี้</text>
+
+          <!-- ── ชั้น 3 ── -->
+          <rect x="24" y="448" width="1032" height="352" rx="5" fill="none" stroke="var(--line)" stroke-width="1.3" stroke-dasharray="4 4"/>
+          <text x="40" y="470" font-size="11.5" font-weight="700" letter-spacing="1.1" fill="var(--ink-3)">3 · mfg_action_completion · createWorkOrderIssueBeforeWOC</text>
+
+          <rect x="44" y="482" width="490" height="96" rx="4" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="1.8"/>
+          <text x="58" y="506" font-size="12" font-weight="700" fill="var(--ok)">มี refreshAdjId · เส้น PWOC</text>
+          <text x="58" y="528" font-size="10.5" fill="var(--ink-2)">load IA แล้วอ่านของที่ใบนี้ถืออยู่ทันที</text>
+          <text x="58" y="546" font-size="10.5" fill="var(--ink-2)">คีย์ = Serial/Lot | Bin | Status | Expiration Date</text>
+          <text x="58" y="566" font-size="10.5" fill="var(--ok)">ไม่มี removeLine เหมารวมอีกแล้ว</text>
+
+          <rect x="566" y="482" width="490" height="96" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.4"/>
+          <text x="580" y="506" font-size="12" font-weight="650" fill="var(--ink)">ไม่มี refreshAdjId · เส้น CREATE WOC</text>
+          <text x="580" y="528" font-size="10.5" fill="var(--ink-2)">สร้าง IA ใบใหม่ตามเดิมทุกประการ</text>
+          <text x="580" y="550" font-size="10.5" fill="var(--ink-3)">ไม่ถูกแตะเลย ไม่ต้อง regression test ใหม่</text>
+
+          <text x="44" y="606" font-size="11" font-weight="650" fill="var(--ink-2)">แตะเฉพาะส่วนที่ต่าง · ตัดสินทีละ assignment</text>
+
+          <rect x="44" y="616" width="192" height="74" rx="4" fill="var(--surface)" stroke="var(--ok)" stroke-width="1.3"/>
+          <text x="58" y="638" font-size="11" font-weight="650" fill="var(--ink)">ขอ = ถืออยู่</text>
+          <text x="58" y="658" font-size="10.5" fill="var(--ink-2)">ไม่แตะ</text>
+          <text x="58" y="678" font-size="10.5" fill="var(--ok)">ต้องมีของว่าง 0</text>
+
+          <rect x="248" y="616" width="192" height="74" rx="4" fill="var(--surface)" stroke="var(--ok)" stroke-width="1.3"/>
+          <text x="262" y="638" font-size="11" font-weight="650" fill="var(--ink)">ขอ น้อยกว่า ถืออยู่</text>
+          <text x="262" y="658" font-size="10.5" fill="var(--ink-2)">ลด quantity</text>
+          <text x="262" y="678" font-size="10.5" fill="var(--ok)">ต้องมีของว่าง 0</text>
+
+          <rect x="452" y="616" width="192" height="74" rx="4" fill="var(--surface)" stroke="var(--ok)" stroke-width="1.3"/>
+          <text x="466" y="638" font-size="11" font-weight="650" fill="var(--ink)">ขอ มากกว่า ถืออยู่</text>
+          <text x="466" y="658" font-size="10.5" fill="var(--ink-2)">เพิ่มเฉพาะส่วนต่าง</text>
+          <text x="466" y="678" font-size="10.5" fill="var(--ok)">ต้องมีของว่างเท่าส่วนต่าง</text>
+
+          <rect x="656" y="616" width="192" height="74" rx="4" fill="var(--surface)" stroke="var(--ok)" stroke-width="1.3"/>
+          <text x="670" y="638" font-size="11" font-weight="650" fill="var(--ink)">ลอตใหม่</text>
+          <text x="670" y="658" font-size="10.5" fill="var(--ink-2)">หยิบใหม่ตามปกติ</text>
+          <text x="670" y="678" font-size="10.5" fill="var(--ink-2)">ต้องมีของว่างเท่าที่ขอ</text>
+
+          <rect x="860" y="616" width="196" height="74" rx="4" fill="var(--surface)" stroke="var(--ok)" stroke-width="1.3"/>
+          <text x="874" y="638" font-size="11" font-weight="650" fill="var(--ink)">feed ไม่มีลอตนี้แล้ว</text>
+          <text x="874" y="658" font-size="10.5" fill="var(--ink-2)">ลบ assignment</text>
+          <text x="874" y="678" font-size="10.5" fill="var(--ok)">ของคืนเข้าคลัง</text>
+
+          <rect x="44" y="706" width="490" height="76" rx="4" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="1.8"/>
+          <text x="58" y="730" font-size="12" font-weight="700" fill="var(--ok)">_assertAdjMatchesFeed</text>
+          <text x="58" y="750" font-size="10.5" fill="var(--ink-2)">Σ ในใบ ต้องเท่ากับ Σ feed · tolerance 1e-6</text>
+          <text x="58" y="770" font-size="10.5" fill="var(--ink-2)">ไม่ตรง = throw ทันที ห้าม save · ชี้ item ที่ถูกเพิ่มด้วยมือ</text>
+
+          <rect x="566" y="706" width="490" height="76" rx="4" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="1.8"/>
+          <text x="580" y="730" font-size="12" font-weight="700" fill="var(--ok)">save หรือไม่ save</text>
+          <text x="580" y="750" font-size="10.5" fill="var(--ink-2)">มีอะไรเปลี่ยน → save() · เลขที่ใบเดิมคงอยู่</text>
+          <text x="580" y="770" font-size="10.5" fill="var(--ink-2)">ไม่มีอะไรเปลี่ยน → คืน id ใบเดิม ไม่เขียนอะไรเลย</text>
+
+          <!-- ── ชั้น 4 ── -->
+          <rect x="24" y="824" width="1032" height="264" rx="5" fill="none" stroke="var(--line)" stroke-width="1.3" stroke-dasharray="4 4"/>
+          <text x="40" y="846" font-size="11.5" font-weight="700" letter-spacing="1.1" fill="var(--ink-3)">4 · ผลลัพธ์</text>
+
+          <rect x="44" y="858" width="490" height="102" rx="4" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="1.8"/>
+          <text x="58" y="882" font-size="12.5" font-weight="700" fill="var(--ok)">สำเร็จ</text>
+          <text x="58" y="904" font-size="10.5" fill="var(--ink-2)">PWOC feed · Completion Log · IA · สต็อก ตรงกันทั้งสี่</text>
+          <text x="58" y="924" font-size="10.5" fill="var(--ink-2)">เลขที่ IA ไม่เปลี่ยน</text>
+          <text x="58" y="946" font-size="10.5" fill="var(--ok)">จอ: Feed + RM Adjustment สำเร็จ</text>
+
+          <rect x="566" y="858" width="490" height="102" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.8"/>
+          <text x="580" y="882" font-size="12.5" font-weight="700" fill="var(--warn)">ล้ม · ของไม่พอจริง</text>
+          <text x="580" y="904" font-size="10.5" fill="var(--ink-2)">IA ไม่ถูกแตะเลย save เป็น atomic</text>
+          <text x="580" y="924" font-size="10.5" fill="var(--ink-2)">skippedLots บอกลอตและส่วนที่ขาด</text>
+          <text x="580" y="946" font-size="10.5" fill="var(--warn)">ยังไม่ถูกส่งต่อขึ้นจอ · งานที่เหลือ</text>
+
+          <rect x="44" y="978" width="1012" height="92" rx="4" fill="var(--surface)" stroke="var(--ok)" stroke-width="1.5"/>
+          <text x="58" y="1002" font-size="12" font-weight="700" fill="var(--ok)">คืนค่าเมื่อล้ม · สองชั้น</text>
+          <text x="58" y="1024" font-size="10.5" fill="var(--ink-2)">Completion Log คืนเป็น JSON ชุดก่อนหน้า (#151)</text>
+          <text x="58" y="1046" font-size="10.5" fill="var(--ink-2)">แถว PWOC feed คืนจาก replacedRows เฉพาะ WO ที่ล้ม · WO ที่ผ่านไม่ถูกแตะ (#152)</text>
+          <text x="580" y="1024" font-size="10.5" fill="var(--ink-3)">คืนไม่สำเร็จต้องดัง ไม่เงียบ</text>
+          <text x="580" y="1046" font-size="10.5" fill="var(--ink-3)">จอบอกว่า Feed ยังไม่ตรงกับสต็อกจริง</text>
+
+          <g fill="none" stroke="var(--ink-3)" stroke-width="1.3">
+            <path d="M356,144 H390" marker-end="url(#nfr)"/>
+            <path d="M708,144 H742" marker-end="url(#nfr)"/>
+            <path d="M200,200 V270" marker-end="url(#nf)"/>
+            <path d="M356,340 H390" marker-end="url(#nfr)"/>
+            <path d="M708,340 H742" marker-end="url(#nfr)"/>
+            <path d="M902,406 V476" marker-end="url(#nf)"/>
+            <path d="M289,578 V610" marker-end="url(#nf)"/>
+            <path d="M289,690 V700" marker-end="url(#nf)"/>
+            <path d="M534,744 H560" marker-end="url(#nfr)"/>
+            <path d="M289,782 V852" marker-end="url(#nf)"/>
+            <path d="M811,782 V852" marker-end="url(#nf)"/>
+            <path d="M811,960 V972" marker-end="url(#nf)"/>
+          </g>
+        </svg>
+      </div>
+      <figcaption>
+        เส้นทาง CREATE WOC (กล่องเทาขวาชั้น 3) ไม่ถูกแตะเลย เพราะไม่ส่ง <code>refreshAdjId</code>
+        การเปลี่ยนพฤติกรรมทั้งหมดอยู่ในสาขาที่มีแต่ PWOC เข้า
+      </figcaption>
+    </figure>
+
+    <h3 style="font-size:15px;margin:0;font-weight:650">ของที่ขึ้น SB1 แล้ว</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>ไฟล์</th><th>แก้อะไร</th><th>issue</th><th>commit</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>mfg_action_completion.js</code></td>
+            <td>diff ราย assignment แทนการรื้อทั้งใบ · คีย์สี่ field · ตัวกัน Σ · no-op คืน id เดิม · skippedLots</td>
+            <td>#151</td><td><code>097e11e</code> <code>691bba5</code> <code>5439fec</code></td>
+          </tr>
+          <tr>
+            <td><code>MFG2 SL Process PreWOC.js</code></td>
+            <td>คืน log เมื่อ RM ADJ ล้ม · ลบ IA เมื่อ feed ว่างหมด</td>
+            <td>#151</td><td><code>33d3ecb</code> <code>5088cb2</code></td>
+          </tr>
+          <tr>
+            <td><code>materials.js</code> · <code>Backend.js</code> · <code>UI.js</code></td>
+            <td>replacedRows · prevByWo · rollbackFeedForWos · ASSET_VERSION 20260819b</td>
+            <td>#152</td><td><code>87cd17c</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-size:15px;margin:0;font-weight:650">ผลเทสจริงบน SB1 · PWOC539 / WO-FSC-00000706</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>เคส</th><th>ก่อนแก้</th><th>หลังแก้</th><th>ตรวจอะไร</th></tr></thead>
+        <tbody>
+          <tr><td>เพิ่มลอตใหม่ ลอตเดิมของหมด</td><td><code>reconfigure…</code></td><td><strong style="color:var(--ok)">success</strong></td><td>detail 2 แถว Σ −16.384</td></tr>
+          <tr><td>ยิงซ้ำไม่แก้อะไร</td><td><code>no adjustment</code></td><td><strong style="color:var(--ok)">success</strong></td><td>ไม่เขียนอะไร เลขใบเดิม</td></tr>
+          <tr><td>ลดจำนวนบนลอตที่หมด 8.192 → 5</td><td><code>no adjustment</code></td><td><strong style="color:var(--ok)">success</strong></td><td>ของคืน 0 → 3.192</td></tr>
+          <tr><td>ขอ 10 จากลอตที่มี 8.192</td><td><code>no adjustment</code></td><td><strong>ล้มถูก</strong></td><td>ตัวกันจับ feed=18.192 adj=16.384 · IA ไม่ถูกแตะ</td></tr>
+          <tr><td>เอาลอตออกจาก feed</td><td>ผ่าน</td><td>ผ่าน</td><td>ของคืนเต็ม 8.192</td></tr>
+          <tr><td>ลบ feed ทั้ง task</td><td><strong style="color:var(--warn)">ของค้างถาวร</strong></td><td><strong style="color:var(--ok)">ลบ IA คืนของ</strong></td><td>คืนครบ 8 ลอต เช่น S&amp;S 81.78082 → 89.97282</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-size:15px;margin:0;font-weight:650">วัดกับใบจริงที่มีหลาย item</h3>
+    <p style="color:var(--ink-3);font-size:13px;margin:0">
+      PWOC539 · feed 14 แถว 11 item รวม 70,431.11244 · วัดเวลาตอบกลับฝั่ง client
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>รอบ</th><th>เส้นทาง</th><th class="num">เวลา</th><th>ผล</th></tr></thead>
+        <tbody>
+          <tr><td>สร้างใบใหม่จาก feed 11 item</td><td>เส้น create เดิม ไม่ได้แตะ</td><td class="num">18.1 วิ</td><td>Created 200879 · 11 บรรทัด</td></tr>
+          <tr><td>ยิงซ้ำไม่แก้อะไร</td><td><strong>diff · no-op</strong></td><td class="num"><strong style="color:var(--ok)">2.6 วิ</strong></td><td>Refreshed 200879 · ไม่เขียนอะไรเลย</td></tr>
+          <tr><td>แก้ลอตเดียวจาก 14 ลอต</td><td><strong>diff · แตะบรรทัดเดียว</strong></td><td class="num"><strong style="color:var(--ok)">7.6 วิ</strong></td><td>22090900001 −16.384 → −13.192 · อีก 10 บรรทัดไม่ถูกแตะ</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--ink-2);font-size:14px;max-width:72ch">
+      ความห่วงเรื่อง governance ที่ตั้งไว้ตอนแรกไม่เป็นจริง — <strong>diff เร็วกว่าการรื้อสร้างใหม่
+      2 ถึง 7 เท่า</strong> เพราะไม่ต้องเขียนบรรทัดที่ไม่ได้เปลี่ยน การอ่านของที่ถืออยู่เพิ่มต้นทุน
+      น้อยกว่าที่ประหยัดได้จากการไม่เขียนทับมาก
+    </p>
+    <p style="color:var(--ink-2);font-size:14px;max-width:72ch">
+      ตรวจซ้ำหลังแก้ลอตเดียว: lot <code>30072601</code> คืนของจาก 0 เป็น 3.192 พอดี ·
+      <code>_assertAdjMatchesFeed</code> ผ่าน แปลว่ายอดรวมทั้ง 11 item ตรงกับ feed
+    </p>
+
+    <div class="note">
+      <p><strong>ยังเหลือ</strong></p>
+      <p>
+        <code>skippedLots</code> ถูกส่งกลับจาก <code>createWorkOrderIssueBeforeWOC</code> แล้ว
+        แต่ <code>MFG2 SL Process PreWOC</code> ยังไม่ forward ขึ้นจอ ตอนของไม่พอจริงผู้ใช้จึงเห็นแค่ยอดรวม
+        ไม่เห็นว่าลอตไหนขาดเท่าไร
+      </p>
+      <p>
+        เส้น CREATE WOC ยังไม่ได้วัดของจริง (ต้องใช้ WO อื่น) และยังไม่ได้ทดสอบใบที่มีหลาย item
+        ว่า <code>_readHeldAssignments</code> กิน governance เท่าไร
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>สถานการณ์จริงหน้างาน</h2>
+    <p style="color:var(--ink-2);font-size:14px;max-width:72ch">
+      หลังแก้แล้ว เคสที่ล้มโดยไม่มีเหตุผลหายไปหมด สิ่งที่เหลือคือ
+      <strong>ของไม่พอจริง</strong> กับ <strong>ข้อมูลลอตผิด</strong> ซึ่งคนหน้างานต้องลงมือแก้เองทุกครั้ง
+      ข้างล่างคือสถานการณ์ที่จะเจอจริงบนไลน์ผลิต
+    </p>
+
+    <figure>
+      <div class="scroll">
+        <svg viewBox="0 0 1060 300" role="img" style="min-width:900px"
+             aria-label="ไทม์ไลน์สองคนทำงานพร้อมกัน คนแรกเปิดหน้าจอตอนเช้าเห็นยอดคงเหลือหนึ่งค่า คนที่สองเบิกลอตเดียวกันไปก่อน พอคนแรกกดบันทึกจึงพบว่าของไม่พอ">
+          <defs>
+            <marker id="sc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink-3)"/>
+            </marker>
+          </defs>
+          <text x="24" y="26" font-size="11.5" font-weight="700" letter-spacing="1.1" fill="var(--ink-3)">ลอต S&amp;S 81-120 · มีของ 89.97282</text>
+
+          <text x="24" y="66" font-size="11.5" font-weight="700" fill="var(--accent)">พนักงาน ก · PWOC ใบที่ 1</text>
+          <rect x="24" y="78" width="290" height="62" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="38" y="100" font-size="11.5" font-weight="650" fill="var(--ink)">08:00 เปิดแท็บ Feed</text>
+          <text x="38" y="122" font-size="10.5" fill="var(--ink-2)">ตารางโหลดยอด 89.97282 ค้างไว้</text>
+
+          <rect x="374" y="78" width="290" height="62" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.4"/>
+          <text x="388" y="100" font-size="11.5" fill="var(--ink-3)">ไปทำงานอื่นต่อ</text>
+          <text x="388" y="122" font-size="10.5" fill="var(--ink-3)">ตัวเลขบนจอไม่อัปเดตเอง</text>
+
+          <rect x="724" y="78" width="312" height="62" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.8"/>
+          <text x="738" y="100" font-size="11.5" font-weight="650" fill="var(--warn)">10:30 กด FIFO แล้ว Save</text>
+          <text x="738" y="122" font-size="10.5" fill="var(--ink-2)">ขอ 85 ตามตัวเลขที่ค้างอยู่</text>
+
+          <text x="24" y="186" font-size="11.5" font-weight="700" fill="var(--accent)">พนักงาน ข · PWOC ใบที่ 2</text>
+          <rect x="374" y="198" width="290" height="62" rx="4" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="1.5"/>
+          <text x="388" y="220" font-size="11.5" font-weight="650" fill="var(--ink)">09:15 เบิกลอตเดียวกัน 60</text>
+          <text x="388" y="242" font-size="10.5" fill="var(--ink-2)">สำเร็จ · ของเหลือจริง 29.97282</text>
+
+          <rect x="724" y="198" width="312" height="62" rx="4" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.8"/>
+          <text x="738" y="220" font-size="11.5" font-weight="650" fill="var(--warn)">ก ล้ม · ของไม่พอจริง</text>
+          <text x="738" y="242" font-size="10.5" fill="var(--ink-2)">ขอ 85 · มีจริง 29.97282 · ขาด 55.02718</text>
+
+          <g fill="none" stroke="var(--ink-3)" stroke-width="1.4">
+            <path d="M314,109 H368" marker-end="url(#sc)"/>
+            <path d="M664,109 H718" marker-end="url(#sc)"/>
+            <path d="M664,229 H718" marker-end="url(#sc)"/>
+            <path d="M519,198 V146" marker-end="url(#sc)"/>
+          </g>
+          <text x="530" y="176" font-size="10.5" fill="var(--warn)">ของถูกหยิบไปแล้ว แต่จอของ ก ไม่รู้</text>
+        </svg>
+      </div>
+      <figcaption>
+        นี่คือเคสที่เหลืออยู่บ่อยที่สุดหลังแก้ · ไม่ใช่บั๊ก แต่เป็นการแย่งของกันจริง
+        ปัญหาอยู่ที่ผู้ใช้รู้ตอนกด Save ไม่ใช่ตอนเลือกลอต
+      </figcaption>
+    </figure>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th style="width:210px">สถานการณ์</th><th>เกิดอะไรขึ้น</th><th>ระบบตอบอะไร</th><th>ต้องทำอะไร</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>แย่งลอตกับใบอื่น</strong><br><span style="color:var(--ink-3)">พบบ่อยสุด</span></td>
+            <td>เปิดจอไว้ตั้งแต่เช้า ระหว่างนั้นใบอื่นเบิกลอตเดียวกันไป ตารางบนจอยังเป็นยอดเก่า</td>
+            <td>Save Feed เขียว แต่ RM Adjustment ล้ม ของไม่พอ</td>
+            <td>กด <strong>Load Lot Available</strong> ก่อน แล้วเลือกลอตใหม่หรือลดจำนวน</td>
+          </tr>
+          <tr>
+            <td><strong>กด FIFO ซ้ำหลัง Save</strong></td>
+            <td>Save Feed ไปรอบหนึ่งแล้ว หน้าจอไม่โหลดยอดใหม่ กด FIFO อีกครั้งจึงเติมจากตัวเลขเก่า</td>
+            <td>ขอเกินของที่เหลือจริง</td>
+            <td>Load Lot Available ก่อนกด FIFO ทุกครั้ง</td>
+          </tr>
+          <tr>
+            <td><strong>เพิ่มยอดผลิตหลังบันทึก Feed</strong></td>
+            <td>Confirm พาเลทเพิ่ม Good Actual QTY โตขึ้น Req BOM QTY จึงโตตาม ต้องเบิกเพิ่ม</td>
+            <td><strong style="color:var(--ok)">ผ่านแล้วหลังแก้</strong> ถ้าลอตมีของว่างพอเท่าส่วนที่เพิ่ม</td>
+            <td>ไม่ต้องทำอะไร · เดิมล้มทั้งที่ของพอ</td>
+          </tr>
+          <tr>
+            <td><strong>ลดจำนวนที่เบิก</strong></td>
+            <td>เบิกเกินไปตอนแรก กลับมาแก้ให้ตรงกับที่ใช้จริง</td>
+            <td><strong style="color:var(--ok)">ผ่านแล้วหลังแก้</strong> ของคืนเข้าคลังทันที</td>
+            <td>ไม่ต้องทำอะไร · เดิมทำไม่ได้เลยถ้าลอตถูกเบิกจนหมด</td>
+          </tr>
+          <tr>
+            <td><strong>ย้ายพาเลทระหว่างวัน</strong></td>
+            <td>ของถูกย้ายจาก Line01 ไปพาเลทใหม่ ผู้ใช้เลือก bin ใหม่ในลอตเดิม</td>
+            <td>ล้มรอบแรก เพราะการลด bin เดิมไม่ปล่อยของให้ bin ใหม่ในการบันทึกเดียว</td>
+            <td>Save Feed <strong>สองรอบ</strong> — รอบแรกเอา bin เดิมออก รอบสองใส่ bin ใหม่</td>
+          </tr>
+          <tr>
+            <td><strong>ยกเลิกการเบิกทั้งใบ</strong></td>
+            <td>WO เปลี่ยนแผนหรือยกเลิก ต้องล้าง Feed ทั้ง task</td>
+            <td><strong style="color:var(--ok)">ลบ Inventory Adjustment แล้วคืนของเข้าคลังให้เอง</strong></td>
+            <td>ไม่ต้องทำอะไร · เดิมของค้างในสต็อกถาวรจนกว่าจะไปลบใบเอง</td>
+          </tr>
+          <tr>
+            <td><strong>QC กักลอต</strong></td>
+            <td>สถานะลอตเปลี่ยนจาก Good เป็น Hold หลังจากเลือกไปแล้ว</td>
+            <td>ล้ม เพราะ assignment อ้าง Good ซึ่งไม่มีของแล้ว</td>
+            <td>เลือกลอตอื่น หรือรอ QC ปลด</td>
+          </tr>
+          <tr>
+            <td><strong>ลอตชื่อซ้ำข้าม item</strong></td>
+            <td>ชื่อลอตอย่าง <code>30072601</code> มีอยู่ในสิบกว่า item ถ้าแถว feed ถือ lot id ผิดตัว</td>
+            <td>ล้มตอน assign หรือถูกตัวตรวจทาน Expiration Date จับได้</td>
+            <td>ลบแถวนั้นแล้วเลือกลอตใหม่จากตาราง</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note note-ok">
+      <p><strong>สี่แถวแรกคือของที่เปลี่ยนไปจริง</strong></p>
+      <p>
+        เพิ่มยอด · ลดยอด · ยกเลิกทั้งใบ — สามอย่างนี้เป็นงานประจำวันที่<strong>เดิมล้มทั้งที่ไม่ควรล้ม</strong>
+        ตอนนี้ผ่านหมด ส่วนการแย่งลอตกับใบอื่นยังล้มอยู่ แต่นั่นคือของไม่พอจริง ระบบควรฟ้อง
+      </p>
+    </div>
+
+    <div class="note">
+      <p><strong>สองอย่างที่จะตัดปัญหาที่เหลือได้เกือบหมด</strong></p>
+      <p>
+        <strong>1 · โหลดยอดคงเหลือใหม่อัตโนมัติหลัง Save Feed สำเร็จ</strong> —
+        ตัดเคสแย่งลอตกับกด FIFO จากตัวเลขเก่าออกไปเกือบทั้งหมด
+      </p>
+      <p>
+        <strong>2 · ตรวจของก่อนกด Save</strong> โดยบวกของที่ Inventory Adjustment ใบนี้ถืออยู่กลับเข้าไปในยอดที่ใช้ได้ —
+        ผู้ใช้จะรู้ตั้งแต่ตอนเลือกลอต ไม่ใช่รอ error หลังกด
+      </p>
+      <p>
+        ทั้งสองอยู่ฝั่งหน้า PWOC แก้ได้ในรีโปเราเอง ไม่ต้องแตะ library ที่ใช้ร่วมกับ CREATE WOC
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>ใครรับผิดชอบตรงไหน</h2>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>จุด</th><th>อยู่ที่ไหน</th><th>สถานะ</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>บันทึก feed ลง PWOC</td>
+            <td>หน้า PWOC · <code>materials.js</code></td>
+            <td>ทำงานถูก ไม่ได้พัง</td>
+          </tr>
+          <tr>
+            <td>ไม่โหลดยอดคงเหลือใหม่หลัง Save Feed สำเร็จ</td>
+            <td>หน้า PWOC — <code>reloadFeedMaterialsFromServer()</code> เรียกเฉพาะกรณีถูก Confirm โดยผู้อื่น</td>
+            <td><strong>ช่องโหว่ · ยังไม่แก้</strong></td>
+          </tr>
+          <tr>
+            <td>ไม่ตรวจว่าของพอก่อน Save Feed</td>
+            <td>หน้า PWOC — <code>validateFeedMaterialsInventory()</code> ถูกเรียกที่ <code>submit.js:442</code> ที่เดียว</td>
+            <td><strong>ช่องโหว่ · ยังไม่แก้</strong></td>
+          </tr>
+          <tr>
+            <td>จ่ายลอตไม่ครบแล้วปล่อยไปตายที่ <code>save()</code></td>
+            <td><code>mfg_action_completion.js</code> ในบัญชี</td>
+            <td><strong>ต้นเหตุ · ยังไม่แก้</strong></td>
+          </tr>
+          <tr>
+            <td>Completion Log ค้างเป็นค่าใหม่เมื่อ IA ล้ม</td>
+            <td><code>MFG2 SL Process PreWOC.js</code></td>
+            <td><strong>แก้แล้ว</strong> · commit <code>33d3ecb</code></td>
+          </tr>
+          <tr>
+            <td>จอไม่บอกสาเหตุ</td>
+            <td>หน้า PWOC · <code>materials.js</code></td>
+            <td><strong>แก้แล้ว</strong> · โชว์ข้อความจริงบน toast</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>สมมติฐานที่ทำให้เกิดช่องโหว่</h2>
+    <p style="color:var(--ink-2);font-size:14px;max-width:70ch">
+      คอมเมนต์ใน <code>materials.js:2617</code> เขียนไว้เองว่า
+    </p>
+    <pre><code>Availability guides only NEW lot selection;
+the real stock check happens at submit (validateFeedMaterialsInventory).</code></pre>
+    <div class="note">
+      สมมติฐานคือ <strong>Submit จะตรวจให้เอง</strong> — แต่ <strong>RM Adjustment วิ่งตั้งแต่ตอน Save Feed</strong>
+      ไม่ได้รอ Submit ผู้ใช้จึงบันทึก feed ที่จ่ายจริงไม่ได้ โดยไม่มีอะไรเตือน
+    </div>
+    <div class="note note-ok">
+      <strong>แก้ได้ที่ฝั่งเราโดยไม่ต้องแตะ account script</strong> — เรียก
+      <code>validateFeedMaterialsInventory()</code> ก่อน Save Feed ด้วย ฟังก์ชันมีอยู่แล้วและใช้งานได้อยู่แล้ว
+      จะเตือนตั้งแต่ต้นทางพร้อมบอกว่าลอตไหนไม่พอ แทนที่จะไปตายปลายทาง
+    </div>
+  </section>
+
+  <section>
+    <h2>workaround ระหว่างรอแก้</h2>
+    <p style="color:var(--ink-2);font-size:14px">
+      Feed ยังบันทึกครบเสมอ — ที่ไม่เกิดคือ Inventory Adjustment เท่านั้น
+      แก้ IA ใบนั้นด้วยมือ หรือ void แล้วให้ระบบสร้างใหม่
+    </p>
+    <div class="note">
+      <strong>ห้ามใช้ทางลัด</strong> — เลิกส่ง <code>refreshAdjId</code> แล้วให้สร้าง IA ใบใหม่ทุกครั้ง
+      ใบเก่าไม่ถูกลบ จะกลายเป็นตัดสต็อกซ้ำสองรอบ
+    </div>
+  </section>
+
+  <footer>
+    <p>
+      หลักฐานจาก SB1 · <span class="mono">PWOC539</span> · <span class="mono">WO-FSC-00000706</span> ·
+      <span class="mono">prewoc_task 3429</span> (TM-4256 Packing) ·
+      <span class="mono">IA-FSC-260800811</span> · Completion Log <span class="mono">4597</span>
+    </p>
+    <p>
+      reproduce ด้วยการยิง <span class="mono">step=ajaxsync&amp;action=CREATE RM ADJ</span> ตรงไปที่ script 974
+      โดยไม่ผ่านหน้าจอ — ได้ข้อความเดียวกัน จึงยืนยันว่าไม่ใช่ปัญหาฝั่ง frontend
+    </p>
+  </footer>
+
+</div>
+
+</body>
+</html>
